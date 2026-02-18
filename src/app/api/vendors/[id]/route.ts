@@ -4,13 +4,14 @@ import { supabase } from '@/lib/supabase'
 // GET /api/vendors/[id] - 業者詳細取得
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const { data, error } = await supabase
       .from('vendors')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (error) {
@@ -32,15 +33,16 @@ export async function GET(
 // PUT /api/vendors/[id] - 業者情報更新
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const body = await request.json()
 
     const { data, error } = await supabase
       .from('vendors')
       .update(body)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 
@@ -59,13 +61,14 @@ export async function PUT(
 // DELETE /api/vendors/[id] - 業者削除
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const { error } = await supabase
       .from('vendors')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (error) {
       console.error('Supabase error:', error)

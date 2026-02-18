@@ -4,13 +4,14 @@ import { supabase } from '@/lib/supabase'
 // GET /api/leads/[id] - リード詳細取得
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const { data, error } = await supabase
       .from('leads')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (error) {
@@ -32,15 +33,16 @@ export async function GET(
 // PUT /api/leads/[id] - リード情報更新
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const body = await request.json()
 
     const { data, error } = await supabase
       .from('leads')
       .update(body)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,6 +15,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
+import { supabase } from '@/lib/supabase'
 import type { Vendor, Area } from '@/lib/database.types'
 
 interface VendorFormProps {
@@ -26,6 +28,8 @@ interface VendorFormProps {
 
 export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: VendorFormProps) {
     const [loading, setLoading] = useState(false)
+    const [imageUploading, setImageUploading] = useState(false)
+    const fileInputRef = useRef<HTMLInputElement>(null)
     const [formData, setFormData] = useState({
         name: '',
         slug: '',
@@ -37,6 +41,7 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
         has_real_estate_partnership: false,
         phone: '',
         website_url: '',
+        image_url: '',
     })
 
     // 編集モードの場合、vendorデータをフォームにセット
@@ -53,6 +58,7 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                 has_real_estate_partnership: vendor.has_real_estate_partnership || false,
                 phone: vendor.phone || '',
                 website_url: vendor.website_url || '',
+                image_url: vendor.image_url || '',
             })
         } else {
             // 新規作成モードの場合、フォームをリセット
@@ -67,9 +73,43 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                 has_real_estate_partnership: false,
                 phone: '',
                 website_url: '',
+                image_url: '',
             })
         }
     }, [vendor, open])
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        // 500KB 上限チェック
+        if (file.size > 500 * 1024) {
+            alert('ファイルサイズは500KB以下にしてください')
+            return
+        }
+
+        setImageUploading(true)
+        try {
+            const ext = file.name.split('.').pop()
+            const fileName = `${Date.now()}.${ext}`
+            const { error } = await supabase.storage
+                .from('vendor-images')
+                .upload(fileName, file, { upsert: true })
+
+            if (error) throw error
+
+            const { data: urlData } = supabase.storage
+                .from('vendor-images')
+                .getPublicUrl(fileName)
+
+            setFormData((prev) => ({ ...prev, image_url: urlData.publicUrl }))
+        } catch (err) {
+            console.error('Image upload error:', err)
+            alert('画像のアップロードに失敗しました')
+        } finally {
+            setImageUploading(false)
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -86,14 +126,15 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
             })
 
             if (!response.ok) {
-                throw new Error('Failed to save vendor')
+                const errData = await response.json().catch(() => ({}))
+                throw new Error(errData.error || 'Failed to save vendor')
             }
 
             onSuccess()
             onOpenChange(false)
         } catch (error) {
             console.error('Error saving vendor:', error)
-            alert('業者の保存に失敗しました')
+            alert(`業者の保存に失敗しました\n${error instanceof Error ? error.message : ''}`)
         } finally {
             setLoading(false)
         }
@@ -201,6 +242,61 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                                 placeholder="https://..."
                             />
                         </div>
+                    </div>
+
+                    {/* 画像アップロード */}
+                    <div className="space-y-2">
+                        <Label>ロゴ・画像</Label>
+                        <div className="flex items-center gap-4">
+                            {formData.image_url && (
+                                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded border">
+                                    <Image
+                                        src={formData.image_url}
+                                        alt="vendor logo"
+                                        fill
+                                        className="object-contain"
+                                        unoptimized
+                                    />
+                                </div>
+                            )}
+                            <div className="flex-1">
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleImageUpload}
+                                />
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={imageUploading}
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    {imageUploading ? 'アップロード中...' : '画像を選択'}
+                                </Button>
+                                {formData.image_url && (
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="ml-2 text-destructive hover:text-destructive"
+                                        onClick={() => setFormData((prev) => ({ ...prev, image_url: '' }))}
+                                    >
+                                        削除
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                        {formData.image_url && (
+                            <Input
+                                value={formData.image_url}
+                                onChange={(e) => setFormData((prev) => ({ ...prev, image_url: e.target.value }))}
+                                placeholder="画像URL"
+                                className="text-xs text-muted-foreground"
+                            />
+                        )}
                     </div>
 
                     <div className="space-y-2">

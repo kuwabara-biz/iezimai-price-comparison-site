@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
     Star,
@@ -76,25 +77,37 @@ export default async function VendorPage({ params }: VendorPageProps) {
                             <span className="text-white">{vendor.name}</span>
                         </div>
                         <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                            <div>
-                                <div className="mb-2 flex flex-wrap items-center gap-2">
-                                    <div className="flex items-center gap-1">
-                                        <Star className="h-5 w-5 fill-accent text-accent" />
-                                        <span className="text-xl font-bold text-white">{avgRating}</span>
+                            <div className="flex items-center gap-4">
+                                {vendor.image_url && (
+                                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-white/20 bg-white">
+                                        <Image
+                                            src={vendor.image_url}
+                                            alt={vendor.name}
+                                            fill
+                                            className="object-contain p-1"
+                                        />
                                     </div>
-                                    <span className="text-sm text-white/60">
-                                        （口コミ {reviews.length}件）
-                                    </span>
-                                    {vendor.has_real_estate_partnership && (
-                                        <Badge className="bg-accent text-accent-foreground">
-                                            <Building className="mr-1 h-3 w-3" />
-                                            不動産買取可
-                                        </Badge>
-                                    )}
+                                )}
+                                <div>
+                                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                                        <div className="flex items-center gap-1">
+                                            <Star className="h-5 w-5 fill-accent text-accent" />
+                                            <span className="text-xl font-bold text-white">{avgRating}</span>
+                                        </div>
+                                        <span className="text-sm text-white/60">
+                                            （口コミ {reviews.length}件）
+                                        </span>
+                                        {vendor.has_real_estate_partnership && (
+                                            <Badge className="bg-accent text-accent-foreground">
+                                                <Building className="mr-1 h-3 w-3" />
+                                                不動産買取可
+                                            </Badge>
+                                        )}
+                                    </div>
+                                    <h1 className="text-2xl font-bold text-white md:text-3xl">
+                                        {vendor.name}
+                                    </h1>
                                 </div>
-                                <h1 className="text-2xl font-bold text-white md:text-3xl">
-                                    {vendor.name}
-                                </h1>
                             </div>
                             <div className="flex gap-2">
                                 {vendor.phone && (
