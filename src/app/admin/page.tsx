@@ -1,4 +1,7 @@
-import Link from "next/link";
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import {
     Users,
     Building,
@@ -6,51 +9,88 @@ import {
     Star,
     TrendingUp,
     ArrowRight,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockVendors, mockReviews } from "@/lib/mock-data";
+} from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import type { Vendor, Lead, Review } from '@/lib/database.types'
+import { LEAD_STATUS_MAP } from '@/lib/constants'
 
 export default function AdminDashboard() {
-    const totalVendors = mockVendors.length;
-    const vendorsWithRealEstate = mockVendors.filter(
-        (v) => v.has_real_estate_partnership
-    ).length;
-    const totalReviews = mockReviews.length;
-    // Mock lead count
-    const totalLeads = 5;
-    const newLeads = 2;
+    const [vendors, setVendors] = useState<Vendor[]>([])
+    const [leads, setLeads] = useState<Lead[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+            const [vendorsRes, leadsRes] = await Promise.all([
+                fetch('/api/vendors'),
+                fetch('/api/leads'),
+            ])
+
+            if (vendorsRes.ok) {
+                const vendorsData = await vendorsRes.json()
+                setVendors(vendorsData)
+            }
+
+            if (leadsRes.ok) {
+                const leadsData = await leadsRes.json()
+                setLeads(leadsData)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const totalVendors = vendors.length
+    const vendorsWithRealEstate = vendors.filter((v) => v.has_real_estate_partnership).length
+    const totalLeads = leads.length
+    const newLeads = leads.filter((l) => l.status === 'new').length
+    const recentLeads = leads.slice(0, 3)
 
     const stats = [
         {
-            label: "登録業者数",
+            label: '登録業者数',
             value: totalVendors,
             icon: <Building className="h-5 w-5" />,
-            href: "/admin/vendors",
-            color: "text-blue-600 bg-blue-50",
+            href: '/admin/vendors',
+            color: 'text-blue-600 bg-blue-50',
         },
         {
-            label: "新規リード",
+            label: '新規リード',
             value: newLeads,
             sub: `全${totalLeads}件`,
             icon: <Users className="h-5 w-5" />,
-            href: "/admin/leads",
-            color: "text-orange-600 bg-orange-50",
+            href: '/admin/leads',
+            color: 'text-orange-600 bg-orange-50',
         },
         {
-            label: "口コミ件数",
-            value: totalReviews,
+            label: '口コミ件数',
+            value: 0,
             icon: <Star className="h-5 w-5" />,
-            href: "/admin/reviews",
-            color: "text-yellow-600 bg-yellow-50",
+            href: '/admin/reviews',
+            color: 'text-yellow-600 bg-yellow-50',
         },
         {
-            label: "不動産提携業者",
+            label: '不動産提携業者',
             value: vendorsWithRealEstate,
             icon: <TrendingUp className="h-5 w-5" />,
-            href: "/admin/vendors",
-            color: "text-green-600 bg-green-50",
+            href: '/admin/vendors',
+            color: 'text-green-600 bg-green-50',
         },
-    ];
+    ]
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <p>読み込み中...</p>
+            </div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-secondary">
@@ -123,37 +163,32 @@ export default function AdminDashboard() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-3">
-                                {[
-                                    { name: "田中様", area: "さいたま市", status: "new", date: "2026-02-15" },
-                                    { name: "鈴木様", area: "川越市", status: "contacted", date: "2026-02-14" },
-                                    { name: "佐藤様", area: "群馬県", status: "in_progress", date: "2026-02-13" },
-                                ].map((lead, i) => (
-                                    <div
-                                        key={i}
-                                        className="flex items-center justify-between rounded-lg border border-border p-3"
-                                    >
-                                        <div>
-                                            <p className="font-medium text-foreground">{lead.name}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {lead.area} · {lead.date}
-                                            </p>
-                                        </div>
-                                        <span
-                                            className={`rounded-full px-2 py-0.5 text-xs font-medium ${lead.status === "new"
-                                                    ? "bg-red-100 text-red-700"
-                                                    : lead.status === "contacted"
-                                                        ? "bg-blue-100 text-blue-700"
-                                                        : "bg-green-100 text-green-700"
-                                                }`}
-                                        >
-                                            {lead.status === "new"
-                                                ? "未対応"
-                                                : lead.status === "contacted"
-                                                    ? "連絡済み"
-                                                    : "対応中"}
-                                        </span>
-                                    </div>
-                                ))}
+                                {recentLeads.length > 0 ? (
+                                    recentLeads.map((lead) => {
+                                        const status = LEAD_STATUS_MAP[lead.status] || LEAD_STATUS_MAP.new
+                                        return (
+                                            <div
+                                                key={lead.id}
+                                                className="flex items-center justify-between rounded-lg border border-border p-3"
+                                            >
+                                                <div>
+                                                    <p className="font-medium text-foreground">{lead.user_name}</p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        {lead.prefecture} {lead.city} ·{' '}
+                                                        {new Date(lead.created_at).toLocaleDateString('ja-JP')}
+                                                    </p>
+                                                </div>
+                                                <span
+                                                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${status.color}`}
+                                                >
+                                                    {status.label}
+                                                </span>
+                                            </div>
+                                        )
+                                    })
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">リードがありません</p>
+                                )}
                             </div>
                             <Link
                                 href="/admin/leads"
@@ -169,50 +204,36 @@ export default function AdminDashboard() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-base">
                                 <MessageSquare className="h-4 w-4 text-accent" />
-                                未承認の口コミ
+                                最近の業者
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-3">
-                                {mockReviews
-                                    .filter((r) => !r.is_approved || true)
-                                    .slice(0, 3)
-                                    .map((review) => {
-                                        const vendor = mockVendors.find(
-                                            (v) => v.id === review.vendor_id
-                                        );
-                                        return (
-                                            <div
-                                                key={review.id}
-                                                className="rounded-lg border border-border p-3"
-                                            >
-                                                <div className="flex items-center justify-between">
-                                                    <p className="text-sm font-medium text-foreground">
-                                                        {vendor?.name}
-                                                    </p>
-                                                    <div className="flex items-center gap-0.5">
-                                                        {Array.from({ length: review.rating || 0 }).map(
-                                                            (_, i) => (
-                                                                <Star
-                                                                    key={i}
-                                                                    className="h-3 w-3 fill-accent text-accent"
-                                                                />
-                                                            )
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                                                    {review.body}
-                                                </p>
+                                {vendors.slice(0, 3).map((vendor) => (
+                                    <div
+                                        key={vendor.id}
+                                        className="rounded-lg border border-border p-3"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-sm font-medium text-foreground">
+                                                {vendor.name}
+                                            </p>
+                                            <div className="flex items-center gap-0.5">
+                                                <Star className="h-3 w-3 fill-accent text-accent" />
+                                                <span className="text-xs font-medium">{vendor.rating}</span>
                                             </div>
-                                        );
-                                    })}
+                                        </div>
+                                        <p className="mt-1 text-xs text-muted-foreground line-clamp-1">
+                                            {vendor.description}
+                                        </p>
+                                    </div>
+                                ))}
                             </div>
                             <Link
-                                href="/admin/reviews"
+                                href="/admin/vendors"
                                 className="mt-3 flex items-center gap-1 text-sm font-medium text-accent hover:underline"
                             >
-                                口コミ管理へ
+                                業者管理へ
                                 <ArrowRight className="h-3 w-3" />
                             </Link>
                         </CardContent>
@@ -220,5 +241,5 @@ export default function AdminDashboard() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
