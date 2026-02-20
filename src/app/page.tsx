@@ -329,6 +329,35 @@ export default async function HomePage() {
                 </div>
             </section>
 
+            {/* ===== 家じまいとは ===== */}
+            <section className="bg-white py-12 md:py-16">
+                <div className="container mx-auto px-4">
+                    <div className="mx-auto max-w-3xl">
+                        <h2 className="mb-6 text-2xl font-bold text-foreground md:text-3xl">
+                            家じまいとは？
+                        </h2>
+                        <p className="mb-8 text-base leading-relaxed text-muted-foreground">
+                            親の死去や施設への入居をきっかけに、実家を整理・処分することを「家じまい」と呼びます。
+                            具体的には、長年暮らした実家に残された家具や荷物を片付ける「遺品整理」と、空き家となった不動産を売却・活用する「不動産処分」の、大きく2つの作業が発生します。どちらか一方だけで済むケースはほとんどなく、多くの場合はセットで対応が必要になります。
+                        </p>
+                        <h3 className="mb-3 text-lg font-bold text-foreground">
+                            「実家の片付けだけ」では終わらない現実
+                        </h3>
+                        <p className="mb-8 text-base leading-relaxed text-muted-foreground">
+                            家じまいを経験した方のほとんどが、その規模の大きさに驚きます。何十年分もの荷物、複数の部屋、庭の雑草、仏壇や貴重品の扱い——。週末に家族だけで少しずつ片付けようとしても、なかなか終わりが見えないのが実情です。
+                            さらに、荷物が片付いた後には不動産の問題が待っています。空き家のまま放置すると固定資産税や管理コストがかかり続けるため、売却や活用の検討も急務となります。
+                        </p>
+                        <h3 className="mb-3 text-lg font-bold text-foreground">
+                            40〜50代が直面しやすいタイミング
+                        </h3>
+                        <p className="text-base leading-relaxed text-muted-foreground">
+                            家じまいは突然やってきます。親の介護が始まった、施設への入居が決まった、相続が発生した——。そのどれもが、仕事や自分の家庭と並行して対応しなければならない、体力的にも精神的にも負担の大きい出来事です。
+                            「どこに頼めばいいかわからない」「費用の相場が見当もつかない」という声はとても多く、このサイトはそんな方のために、遺品整理と不動産売却の両方を一括して比較・相談できる窓口として作られています。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             {/* ===== 家じまい.comが選ばれる理由 ===== */}
             <section className="bg-secondary py-12 md:py-16">
                 <div className="container mx-auto px-4">
