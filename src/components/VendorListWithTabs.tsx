@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Star, Building, MessageCircle, ArrowRight, MapPin } from 'lucide-react'
+import { Star, Building, Phone, ArrowRight, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Vendor, Area } from '@/lib/database.types'
+import { COMPANY } from '@/lib/constants'
 
 type TabKey = 'recommended' | 'reviews' | 'price' | 'realestate'
 
@@ -102,45 +103,47 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
 
                                             {/* Logo + Content */}
                                             <div className="min-w-0 flex-1">
-                                                <div className="mb-2 flex items-center gap-3">
+                                                <div className="mb-3 flex gap-4">
+                                                    {/* 横長サムネイル */}
                                                     {vendor.image_url ? (
-                                                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded border border-border">
+                                                        <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border border-border">
                                                             <Image
                                                                 src={vendor.image_url}
                                                                 alt={vendor.name}
                                                                 fill
-                                                                className="object-contain"
+                                                                className="object-cover"
                                                             />
                                                         </div>
                                                     ) : null}
-                                                    <div className="flex flex-wrap items-center gap-2">
-                                                        <h3 className="text-base font-bold text-foreground">{vendor.name}</h3>
-                                                        {vendor.has_real_estate_partnership && (
-                                                            <Badge className="bg-accent/10 text-xs text-accent hover:bg-accent/10">
-                                                                <Building className="mr-1 h-3 w-3" />
-                                                                不動産提携
-                                                            </Badge>
-                                                        )}
+                                                    <div className="min-w-0 flex-1">
+                                                        <div className="flex flex-wrap items-center gap-2">
+                                                            <h3 className="text-lg font-bold text-foreground">{vendor.name}</h3>
+                                                            {vendor.has_real_estate_partnership && (
+                                                                <Badge className="bg-accent/10 text-sm text-accent hover:bg-accent/10">
+                                                                    <Building className="mr-1 h-3.5 w-3.5" />
+                                                                    不動産提携
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+                                                        {/* Rating */}
+                                                        <div className="mt-1 flex items-center gap-1">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <Star
+                                                                    key={i}
+                                                                    className={`h-4 w-4 ${
+                                                                        i < Math.round(vendor.rating)
+                                                                            ? 'fill-yellow-400 text-yellow-400'
+                                                                            : 'fill-gray-200 text-gray-200'
+                                                                    }`}
+                                                                />
+                                                            ))}
+                                                            <span className="ml-1 text-base font-semibold">{vendor.rating}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                {/* Rating */}
-                                                <div className="mb-2 flex items-center gap-1">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <Star
-                                                            key={i}
-                                                            className={`h-4 w-4 ${
-                                                                i < Math.round(vendor.rating)
-                                                                    ? 'fill-yellow-400 text-yellow-400'
-                                                                    : 'fill-gray-200 text-gray-200'
-                                                            }`}
-                                                        />
-                                                    ))}
-                                                    <span className="ml-1 text-sm font-semibold">{vendor.rating}</span>
-                                                </div>
-
                                                 {vendor.description && (
-                                                    <p className="mb-3 line-clamp-3 text-sm text-muted-foreground">
+                                                    <p className="mb-3 line-clamp-3 text-base text-muted-foreground">
                                                         {vendor.description}
                                                     </p>
                                                 )}
@@ -148,17 +151,17 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                                                 {vendor.features && vendor.features.length > 0 && (
                                                     <div className="mb-3 flex flex-wrap gap-1">
                                                         {vendor.features.slice(0, 4).map(f => (
-                                                            <Badge key={f} variant="secondary" className="text-xs">
+                                                            <Badge key={f} variant="secondary" className="text-sm">
                                                                 {f}
                                                             </Badge>
                                                         ))}
                                                     </div>
                                                 )}
 
-                                                {/* Footer: price + CTAs */}
+                                                {/* Footer: price + detail link */}
                                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                                     {vendor.min_price ? (
-                                                        <p className="text-sm text-muted-foreground">
+                                                        <p className="text-base text-muted-foreground">
                                                             料金目安：
                                                             <span className="font-semibold text-foreground">
                                                                 {vendor.min_price.toLocaleString()}円〜
@@ -167,24 +170,42 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                                                     ) : (
                                                         <div />
                                                     )}
-                                                    <div className="flex gap-2">
-                                                        {vendor.slug && (
-                                                            <Link href={`/vendor/${vendor.slug}`}>
-                                                                <Button size="sm" variant="outline" className="border-primary text-primary hover:bg-primary/5">
-                                                                    詳細を見る
-                                                                    <ArrowRight className="ml-1 h-3 w-3" />
-                                                                </Button>
-                                                            </Link>
-                                                        )}
-                                                        <Button size="sm" className="bg-[#06C755] text-white hover:bg-[#06C755]/90">
-                                                            <MessageCircle className="mr-1 h-3 w-3" />
-                                                            LINEで相談
-                                                        </Button>
-                                                    </div>
+                                                    {vendor.slug && (
+                                                        <Link href={`/vendor/${vendor.slug}`}>
+                                                            <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
+                                                                料金やサービスを見る
+                                                                <ArrowRight className="ml-1 h-4 w-4" />
+                                                            </Button>
+                                                        </Link>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
                                     </CardContent>
+                                    {/* 電話 + 相談フォームバー */}
+                                    <div className="flex flex-col gap-3 border-t border-border bg-green-50/60 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="inline-flex items-center gap-1 rounded bg-green-600 px-2 py-0.5 text-xs font-bold text-white">
+                                                <Phone className="h-3 w-3" />
+                                                通話無料
+                                            </span>
+                                            <a
+                                                href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
+                                                className="text-xl font-bold text-foreground hover:text-primary"
+                                            >
+                                                {COMPANY.phone}
+                                            </a>
+                                            <span className="hidden text-sm text-muted-foreground sm:inline">
+                                                {COMPANY.businessHours}
+                                            </span>
+                                        </div>
+                                        <Link href="/contact">
+                                            <Button className="w-full sm:w-auto">
+                                                無料相談フォームへ
+                                                <ArrowRight className="ml-1 h-4 w-4" />
+                                            </Button>
+                                        </Link>
+                                    </div>
                                 </Card>
                             ))
                         )}
@@ -193,18 +214,26 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                     {/* Sidebar */}
                     <aside className="hidden w-60 shrink-0 lg:block">
                         <div className="sticky top-6 space-y-4">
-                            {/* LINE CTA card */}
-                            <Card className="overflow-hidden border-0 bg-[#06C755]/10">
+                            {/* 相談 CTA card */}
+                            <Card className="overflow-hidden border-primary/20 bg-primary/5">
                                 <CardContent className="p-5 text-center">
-                                    <MessageCircle className="mx-auto mb-2 h-8 w-8 text-[#06C755]" />
-                                    <h3 className="mb-1 font-bold text-foreground">LINE で無料相談</h3>
-                                    <p className="mb-3 text-xs text-muted-foreground">
-                                        写真を送るだけで即日概算見積もり
+                                    <Phone className="mx-auto mb-2 h-8 w-8 text-primary" />
+                                    <h3 className="mb-1 font-bold text-foreground">無料でご相談</h3>
+                                    <p className="mb-3 text-sm text-muted-foreground">
+                                        {COMPANY.businessHours}
                                     </p>
-                                    <Button className="w-full bg-[#06C755] text-white hover:bg-[#06C755]/90">
-                                        LINEで相談する
-                                    </Button>
-                                    <p className="mt-2 text-xs text-muted-foreground">※ 無料・営業電話なし</p>
+                                    <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
+                                        <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10">
+                                            <Phone className="mr-1 h-4 w-4" />
+                                            {COMPANY.phone}
+                                        </Button>
+                                    </a>
+                                    <Link href="/contact">
+                                        <Button className="mt-2 w-full">
+                                            フォームで相談する
+                                        </Button>
+                                    </Link>
+                                    <p className="mt-2 text-xs text-muted-foreground">※ 営業電話は一切行いません</p>
                                 </CardContent>
                             </Card>
 

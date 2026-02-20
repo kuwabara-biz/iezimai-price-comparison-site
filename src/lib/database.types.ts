@@ -23,7 +23,34 @@ export interface Vendor {
   phone: string | null;
   website_url: string | null;
   image_url: string | null;
+  // 詳細情報（add_vendor_details.sql で追加）
+  address: string | null;
+  representative_name: string | null;
+  business_hours: string | null;
+  established_year: number | null;
+  employee_count: string | null;
+  certifications: string[] | null;
+  staff_message: string | null;
   created_at: string;
+}
+
+export interface VendorPricePlan {
+  id: string;
+  vendor_id: string;
+  room_type: string;
+  price_from: number | null;
+  price_to: number | null;
+  duration_hours: string | null;
+  staff_count: string | null;
+  order_index: number;
+}
+
+export interface VendorFaq {
+  id: string;
+  vendor_id: string;
+  question: string;
+  answer: string;
+  order_index: number;
 }
 
 export interface Lead {

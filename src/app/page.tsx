@@ -4,7 +4,7 @@ import {
     ShieldCheck,
     Clock,
     Star,
-    MessageCircle,
+    Phone,
     ArrowRight,
     Building,
     Users,
@@ -18,6 +18,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { getAreas, getVendors } from '@/lib/supabase-helpers'
 import AreaSearchClient from '@/components/AreaSearchClient'
+import { COMPANY } from '@/lib/constants'
 import VendorListWithTabs from '@/components/VendorListWithTabs'
 
 export default async function HomePage() {
@@ -77,23 +78,25 @@ export default async function HomePage() {
                         地元密着の優良業者を厳選掲載。口コミ・料金で比較できます。
                     </p>
                     <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                        <Button
-                            size="lg"
-                            className="w-full bg-[#06C755] text-white shadow-lg hover:bg-[#06C755]/90 sm:w-auto sm:px-10"
-                        >
-                            <MessageCircle className="mr-2 h-5 w-5" />
-                            LINEで無料相談
-                        </Button>
-                        <Link href="/#search">
+                        <Link href="/contact">
+                            <Button
+                                size="lg"
+                                className="w-full bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg sm:w-auto sm:px-10"
+                            >
+                                無料相談フォームへ
+                                <ArrowRight className="ml-2 h-5 w-5" />
+                            </Button>
+                        </Link>
+                        <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
                             <Button
                                 size="lg"
                                 variant="outline"
                                 className="w-full border-white/30 bg-transparent text-white hover:bg-white/10 sm:w-auto sm:px-10"
                             >
-                                エリアから業者を探す
-                                <ArrowRight className="ml-2 h-4 w-4" />
+                                <Phone className="mr-2 h-5 w-5" />
+                                {COMPANY.phone}
                             </Button>
-                        </Link>
+                        </a>
                     </div>
                     <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/60">
                         <span className="flex items-center gap-1">
@@ -127,32 +130,34 @@ export default async function HomePage() {
                                 href={`/vendor/${vendor.slug}`}
                                 className="w-40 shrink-0 md:w-auto"
                             >
-                                <Card className="h-full border-border bg-white text-center transition-all hover:-translate-y-0.5 hover:shadow-md">
-                                    <CardContent className="flex flex-col items-center gap-3 p-4">
+                                <Card className="h-full border-border bg-white transition-all hover:-translate-y-0.5 hover:shadow-md">
+                                    <CardContent className="flex flex-col gap-3 p-0">
                                         {vendor.image_url ? (
-                                            <div className="relative h-14 w-14 overflow-hidden rounded-lg border border-border">
+                                            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-xl border-b border-border">
                                                 <Image
                                                     src={vendor.image_url}
                                                     alt={vendor.name}
                                                     fill
-                                                    className="object-contain"
+                                                    className="object-cover"
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-border bg-secondary text-xl font-bold text-primary">
+                                            <div className="flex aspect-[4/3] w-full items-center justify-center rounded-t-xl border-b border-border bg-secondary text-2xl font-bold text-primary">
                                                 {vendor.name.charAt(0)}
                                             </div>
                                         )}
-                                        <p className="line-clamp-2 text-sm font-bold leading-tight text-foreground">
-                                            {vendor.name}
-                                        </p>
-                                        <div className="flex items-center gap-0.5">
-                                            <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                                            <span className="text-sm font-semibold">{vendor.rating}</span>
+                                        <div className="flex flex-col gap-2 p-3">
+                                            <p className="line-clamp-2 text-base font-bold leading-tight text-foreground">
+                                                {vendor.name}
+                                            </p>
+                                            <div className="flex items-center gap-0.5">
+                                                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                                <span className="text-base font-semibold">{vendor.rating}</span>
+                                            </div>
+                                            <Button size="sm" className="w-full text-sm">
+                                                詳細を見る
+                                            </Button>
                                         </div>
-                                        <Button size="sm" className="w-full text-xs">
-                                            詳細を見る
-                                        </Button>
                                     </CardContent>
                                 </Card>
                             </Link>
@@ -173,12 +178,12 @@ export default async function HomePage() {
                                 key={cat.label}
                                 className="w-56 shrink-0 rounded-xl border border-border bg-white p-4 shadow-sm md:w-auto"
                             >
-                                <h3 className="mb-4 text-center text-sm font-bold text-foreground">
+                                <h3 className="mb-4 text-center text-base font-bold text-foreground">
                                     {cat.label}
                                 </h3>
                                 <div className="space-y-2">
                                     {cat.vendors.length === 0 ? (
-                                        <p className="py-4 text-center text-xs text-muted-foreground">
+                                        <p className="py-4 text-center text-sm text-muted-foreground">
                                             データなし
                                         </p>
                                     ) : (
@@ -186,19 +191,19 @@ export default async function HomePage() {
                                             <Link key={vendor.id} href={`/vendor/${vendor.slug}`}>
                                                 <div className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-secondary">
                                                     <span
-                                                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                                                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
                                                             rankStyle[i] ?? 'bg-secondary text-muted-foreground'
                                                         }`}
                                                     >
                                                         {i + 1}
                                                     </span>
                                                     <div className="min-w-0">
-                                                        <p className="truncate text-sm font-medium text-foreground">
+                                                        <p className="truncate text-base font-medium text-foreground">
                                                             {vendor.name}
                                                         </p>
                                                         <div className="flex items-center gap-0.5">
-                                                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                                            <span className="text-xs text-muted-foreground">
+                                                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                                            <span className="text-sm text-muted-foreground">
                                                                 {vendor.rating}
                                                             </span>
                                                         </div>
@@ -308,12 +313,12 @@ export default async function HomePage() {
                                     <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
                                         {item.icon}
                                     </div>
-                                    <h3 className="mb-1 hidden text-sm font-bold text-foreground md:block">
+                                    <h3 className="mb-1 hidden text-base font-bold text-foreground md:block">
                                         {item.title}
                                     </h3>
-                                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                                    <p className="text-sm text-muted-foreground">{item.description}</p>
                                     {item.optional && (
-                                        <span className="mt-2 inline-block rounded-full bg-accent/10 px-2 py-0.5 text-xs text-accent">
+                                        <span className="mt-2 inline-block rounded-full bg-accent/10 px-2 py-0.5 text-sm text-accent">
                                             任意
                                         </span>
                                     )}
@@ -368,8 +373,8 @@ export default async function HomePage() {
                                         {item.icon}
                                     </div>
                                     <div>
-                                        <h3 className="mb-1 font-semibold text-foreground">{item.title}</h3>
-                                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                                        <h3 className="mb-1 text-lg font-semibold text-foreground">{item.title}</h3>
+                                        <p className="text-base text-muted-foreground">{item.description}</p>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -388,23 +393,25 @@ export default async function HomePage() {
                         遺品整理・空き家の売却、どちらもプロがサポートします
                     </p>
                     <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                        <Button
-                            size="lg"
-                            className="w-full bg-[#06C755] text-white shadow-lg hover:bg-[#06C755]/90 sm:w-auto sm:px-10"
-                        >
-                            <MessageCircle className="mr-2 h-5 w-5" />
-                            LINEで無料相談
-                        </Button>
-                        <Link href="/#search">
+                        <Link href="/contact">
+                            <Button
+                                size="lg"
+                                className="w-full bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg sm:w-auto sm:px-10"
+                            >
+                                無料相談フォームへ
+                                <ArrowRight className="ml-2 h-5 w-5" />
+                            </Button>
+                        </Link>
+                        <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
                             <Button
                                 size="lg"
                                 variant="outline"
                                 className="w-full border-white/30 bg-transparent text-white hover:bg-white/10 sm:w-auto sm:px-10"
                             >
-                                エリアから業者を探す
-                                <ArrowRight className="ml-2 h-4 w-4" />
+                                <Phone className="mr-2 h-5 w-5" />
+                                {COMPANY.phone}
                             </Button>
-                        </Link>
+                        </a>
                     </div>
                 </div>
             </section>

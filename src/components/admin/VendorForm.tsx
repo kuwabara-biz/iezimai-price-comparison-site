@@ -42,9 +42,16 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
         phone: '',
         website_url: '',
         image_url: '',
+        // 詳細情報
+        address: '',
+        representative_name: '',
+        business_hours: '',
+        established_year: '' as string | number,
+        employee_count: '',
+        certifications: [] as string[],
+        staff_message: '',
     })
 
-    // 編集モードの場合、vendorデータをフォームにセット
     useEffect(() => {
         if (vendor) {
             setFormData({
@@ -59,9 +66,15 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                 phone: vendor.phone || '',
                 website_url: vendor.website_url || '',
                 image_url: vendor.image_url || '',
+                address: vendor.address || '',
+                representative_name: vendor.representative_name || '',
+                business_hours: vendor.business_hours || '',
+                established_year: vendor.established_year || '',
+                employee_count: vendor.employee_count || '',
+                certifications: vendor.certifications || [],
+                staff_message: vendor.staff_message || '',
             })
         } else {
-            // 新規作成モードの場合、フォームをリセット
             setFormData({
                 name: '',
                 slug: '',
@@ -74,6 +87,13 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                 phone: '',
                 website_url: '',
                 image_url: '',
+                address: '',
+                representative_name: '',
+                business_hours: '',
+                established_year: '',
+                employee_count: '',
+                certifications: [],
+                staff_message: '',
             })
         }
     }, [vendor, open])
@@ -82,7 +102,6 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
         const file = e.target.files?.[0]
         if (!file) return
 
-        // 500KB 上限チェック
         if (file.size > 500 * 1024) {
             alert('ファイルサイズは500KB以下にしてください')
             return
@@ -111,18 +130,25 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
         }
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
 
         try {
+            const payload = {
+                ...formData,
+                established_year: formData.established_year
+                    ? Number(formData.established_year)
+                    : null,
+            }
+
             const url = vendor ? `/api/vendors/${vendor.id}` : '/api/vendors'
             const method = vendor ? 'PUT' : 'POST'
 
             const response = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload),
             })
 
             if (!response.ok) {
@@ -154,9 +180,14 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
         setFormData((prev) => ({ ...prev, features }))
     }
 
+    const handleCertificationChange = (value: string) => {
+        const certifications = value.split(',').map((c) => c.trim()).filter(Boolean)
+        setFormData((prev) => ({ ...prev, certifications }))
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+            <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[640px]">
                 <DialogHeader>
                     <DialogTitle>{vendor ? '業者情報を編集' : '新規業者を追加'}</DialogTitle>
                     <DialogDescription>
@@ -165,6 +196,7 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* ─── 基本情報 ─── */}
                     <div className="space-y-2">
                         <Label htmlFor="name">業者名 *</Label>
                         <Input
@@ -187,12 +219,23 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="description">説明</Label>
+                        <Label htmlFor="description">業者紹介</Label>
                         <Textarea
                             id="description"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             rows={3}
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="staff_message">スタッフメッセージ</Label>
+                        <Textarea
+                            id="staff_message"
+                            value={formData.staff_message}
+                            onChange={(e) => setFormData({ ...formData, staff_message: e.target.value })}
+                            rows={3}
+                            placeholder="スタッフからのメッセージ（業者ページに表示されます）"
                         />
                     </div>
 
@@ -211,7 +254,7 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="min_price">最低料金(円)</Label>
+                            <Label htmlFor="min_price">最低料金（円）</Label>
                             <Input
                                 id="min_price"
                                 type="number"
@@ -244,7 +287,79 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                         </div>
                     </div>
 
-                    {/* 画像アップロード */}
+                    {/* ─── 会社詳細情報 ─── */}
+                    <div className="border rounded-lg p-4 space-y-4 bg-muted/30">
+                        <p className="text-sm font-semibold text-muted-foreground">会社詳細情報</p>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="address">住所</Label>
+                            <Input
+                                id="address"
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                placeholder="例: 埼玉県さいたま市大宮区1-1-1"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="representative_name">代表者名</Label>
+                                <Input
+                                    id="representative_name"
+                                    value={formData.representative_name}
+                                    onChange={(e) => setFormData({ ...formData, representative_name: e.target.value })}
+                                    placeholder="例: 田中 太郎"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="business_hours">営業時間</Label>
+                                <Input
+                                    id="business_hours"
+                                    value={formData.business_hours}
+                                    onChange={(e) => setFormData({ ...formData, business_hours: e.target.value })}
+                                    placeholder="例: 8:00〜20:00（年中無休）"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="established_year">設立年</Label>
+                                <Input
+                                    id="established_year"
+                                    type="number"
+                                    value={formData.established_year}
+                                    onChange={(e) => setFormData({ ...formData, established_year: e.target.value })}
+                                    placeholder="例: 2004"
+                                    min="1900"
+                                    max="2099"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="employee_count">スタッフ数</Label>
+                                <Input
+                                    id="employee_count"
+                                    value={formData.employee_count}
+                                    onChange={(e) => setFormData({ ...formData, employee_count: e.target.value })}
+                                    placeholder="例: 15名"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="certifications">資格・許認可（カンマ区切り）</Label>
+                            <Input
+                                id="certifications"
+                                value={formData.certifications.join(', ')}
+                                onChange={(e) => handleCertificationChange(e.target.value)}
+                                placeholder="例: 遺品整理士認定（第12345号）, 一般廃棄物収集運搬業許可"
+                            />
+                        </div>
+                    </div>
+
+                    {/* ─── 画像アップロード ─── */}
                     <div className="space-y-2">
                         <Label>ロゴ・画像</Label>
                         <div className="flex items-center gap-4">
@@ -300,7 +415,7 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="features">特徴(カンマ区切り)</Label>
+                        <Label htmlFor="features">特徴・サービス（カンマ区切り）</Label>
                         <Input
                             id="features"
                             value={formData.features.join(', ')}
@@ -322,6 +437,7 @@ export function VendorForm({ open, onOpenChange, vendor, areas, onSuccess }: Ven
                         </Label>
                     </div>
 
+                    {/* ─── 対応エリア ─── */}
                     <div className="space-y-2">
                         <Label>対応エリア *</Label>
                         <div className="max-h-[200px] space-y-2 overflow-y-auto rounded-md border p-3">

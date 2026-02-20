@@ -1,3 +1,10 @@
+// ===== みんなの家株式会社 連絡先（要変更） =====
+export const COMPANY = {
+    name: 'みんなの家株式会社',
+    phone: '0120-000-000', // ← 実際の番号に変更してください
+    businessHours: '受付時間 9:00〜19:00（土日祝も対応）',
+} as const
+
 export const LEAD_STATUS_CONFIG = [
     { value: 'new', label: '未対応', color: 'bg-red-100 text-red-700' },
     { value: 'contacted', label: '連絡済み', color: 'bg-blue-100 text-blue-700' },
