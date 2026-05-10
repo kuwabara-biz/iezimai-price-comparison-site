@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // GET /api/vendors - 全業者取得
 export async function GET() {
@@ -21,12 +22,12 @@ export async function GET() {
   }
 }
 
-// POST /api/vendors - 新規業者作成
+// POST /api/vendors - 新規業者作成（管理者用）
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('vendors')
       .insert([body])
       .select()

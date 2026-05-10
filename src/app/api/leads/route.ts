@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
-// GET /api/leads - 全リード取得
+// GET /api/leads - 全リード取得（管理者用）
 export async function GET() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('leads')
       .select('*')
       .order('created_at', { ascending: false })
@@ -21,12 +21,12 @@ export async function GET() {
   }
 }
 
-// POST /api/leads - 新規リード作成
+// POST /api/leads - 新規リード作成（フォーム送信、サーバー側でservice_role使用）
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('leads')
       .insert([body])
       .select()

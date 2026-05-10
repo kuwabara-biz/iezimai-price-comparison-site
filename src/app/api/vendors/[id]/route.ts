@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // GET /api/vendors/[id] - 業者詳細取得
 export async function GET(
@@ -30,7 +31,7 @@ export async function GET(
   }
 }
 
-// PUT /api/vendors/[id] - 業者情報更新
+// PUT /api/vendors/[id] - 業者情報更新（管理者用）
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -39,7 +40,7 @@ export async function PUT(
   try {
     const body = await request.json()
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('vendors')
       .update(body)
       .eq('id', id)
@@ -58,14 +59,14 @@ export async function PUT(
   }
 }
 
-// DELETE /api/vendors/[id] - 業者削除
+// DELETE /api/vendors/[id] - 業者削除（管理者用）
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
   try {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('vendors')
       .delete()
       .eq('id', id)

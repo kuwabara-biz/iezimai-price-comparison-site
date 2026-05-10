@@ -126,10 +126,11 @@ export async function getVendorFaqs(vendorId: string) {
 // ============================================
 
 /**
- * 新規リードを作成
+ * 新規リードを作成（service_role 必須・APIルート専用）
  */
 export async function createLead(leadData: Omit<Lead, 'id' | 'created_at' | 'status'>) {
-  const { data, error } = await supabase
+  const { supabaseAdmin } = await import('./supabase-admin')
+  const { data, error } = await supabaseAdmin
     .from('leads')
     .insert([{ ...leadData, status: 'new' }])
     .select()
@@ -140,10 +141,11 @@ export async function createLead(leadData: Omit<Lead, 'id' | 'created_at' | 'sta
 }
 
 /**
- * 全リードを取得
+ * 全リードを取得（service_role 必須・APIルート専用）
  */
 export async function getLeads() {
-  const { data, error } = await supabase
+  const { supabaseAdmin } = await import('./supabase-admin')
+  const { data, error } = await supabaseAdmin
     .from('leads')
     .select('*')
     .order('created_at', { ascending: false })

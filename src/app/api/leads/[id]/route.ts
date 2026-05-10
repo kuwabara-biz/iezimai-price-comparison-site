@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
-// GET /api/leads/[id] - リード詳細取得
+// GET /api/leads/[id] - リード詳細取得（管理者用）
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('leads')
       .select('*')
       .eq('id', id)
@@ -39,7 +39,7 @@ export async function PUT(
   try {
     const body = await request.json()
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('leads')
       .update(body)
       .eq('id', id)
