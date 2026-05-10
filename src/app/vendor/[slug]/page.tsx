@@ -5,7 +5,6 @@ import {
     Star,
     Building,
     MapPin,
-    Phone,
     ExternalLink,
     ArrowRight,
     CheckCircle2,
@@ -30,7 +29,6 @@ import {
     getVendorPricePlans,
     getVendorFaqs,
 } from "@/lib/supabase-helpers";
-import { COMPANY } from "@/lib/constants";
 import type { Metadata } from "next";
 
 interface VendorPageProps {
@@ -190,17 +188,6 @@ export default async function VendorPage({ params }: VendorPageProps) {
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Button>
                                 </Link>
-                                <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
-                                    <Button
-                                        size="lg"
-                                        variant="outline"
-                                        className="w-full border-white/30 bg-white/10 text-white hover:bg-white/20 text-lg h-14"
-                                    >
-                                        <Phone className="mr-2 h-5 w-5" />
-                                        {COMPANY.phone}
-                                    </Button>
-                                </a>
-                                <p className="text-center text-sm text-white/60">{COMPANY.businessHours}</p>
                             </div>
                         </div>
                     </div>
@@ -561,18 +548,6 @@ export default async function VendorPage({ params }: VendorPageProps) {
                                                 <ArrowRight className="ml-2 h-4 w-4" />
                                             </Button>
                                         </Link>
-                                        <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
-                                            <Button
-                                                variant="outline"
-                                                className="mt-3 w-full text-base h-12"
-                                            >
-                                                <Phone className="mr-2 h-5 w-5" />
-                                                {COMPANY.phone}
-                                            </Button>
-                                        </a>
-                                        <p className="mt-3 text-center text-sm text-muted-foreground">
-                                            {COMPANY.businessHours}
-                                        </p>
                                     </CardContent>
                                 </Card>
                             </div>

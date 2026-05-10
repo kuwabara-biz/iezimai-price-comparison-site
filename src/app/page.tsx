@@ -4,7 +4,6 @@ import {
     ShieldCheck,
     Clock,
     Star,
-    Phone,
     ArrowRight,
     Building,
     Users,
@@ -18,7 +17,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { getAreas, getVendors } from '@/lib/supabase-helpers'
 import AreaSearchClient from '@/components/AreaSearchClient'
-import { COMPANY } from '@/lib/constants'
 import VendorListWithTabs from '@/components/VendorListWithTabs'
 
 export default async function HomePage() {
@@ -77,7 +75,7 @@ export default async function HomePage() {
                     <p className="mx-auto mb-8 max-w-xl text-base text-white/80 md:text-lg">
                         地元密着の優良業者を厳選掲載。口コミ・料金で比較できます。
                     </p>
-                    <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                    <div className="flex justify-center">
                         <Link href="/contact">
                             <Button
                                 size="lg"
@@ -87,16 +85,6 @@ export default async function HomePage() {
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
-                        <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                className="w-full border-white/30 bg-transparent text-white hover:bg-white/10 sm:w-auto sm:px-10"
-                            >
-                                <Phone className="mr-2 h-5 w-5" />
-                                {COMPANY.phone}
-                            </Button>
-                        </a>
                     </div>
                     <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/60">
                         <span className="flex items-center gap-1">
@@ -431,16 +419,6 @@ export default async function HomePage() {
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
-                        <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                className="w-full border-white/30 bg-transparent text-white hover:bg-white/10 sm:w-auto sm:px-10"
-                            >
-                                <Phone className="mr-2 h-5 w-5" />
-                                {COMPANY.phone}
-                            </Button>
-                        </a>
                     </div>
                 </div>
             </section>

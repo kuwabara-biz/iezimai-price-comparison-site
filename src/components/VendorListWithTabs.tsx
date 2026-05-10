@@ -3,12 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Star, Building, Phone, ArrowRight, MapPin } from 'lucide-react'
+import { Star, Building, ArrowRight, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Vendor, Area } from '@/lib/database.types'
-import { COMPANY } from '@/lib/constants'
 
 type TabKey = 'recommended' | 'reviews' | 'price' | 'realestate'
 
@@ -182,23 +181,8 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                                             </div>
                                         </div>
                                     </CardContent>
-                                    {/* 電話 + 相談フォームバー */}
-                                    <div className="flex flex-col gap-3 border-t border-border bg-green-50/60 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <span className="inline-flex items-center gap-1 rounded bg-green-600 px-2 py-0.5 text-xs font-bold text-white">
-                                                <Phone className="h-3 w-3" />
-                                                通話無料
-                                            </span>
-                                            <a
-                                                href={`tel:${COMPANY.phone.replace(/-/g, '')}`}
-                                                className="text-xl font-bold text-foreground hover:text-primary"
-                                            >
-                                                {COMPANY.phone}
-                                            </a>
-                                            <span className="hidden text-sm text-muted-foreground sm:inline">
-                                                {COMPANY.businessHours}
-                                            </span>
-                                        </div>
+                                    {/* 相談フォームバー */}
+                                    <div className="flex justify-end border-t border-border bg-green-50/60 px-5 py-3">
                                         <Link href="/contact">
                                             <Button className="w-full sm:w-auto">
                                                 無料相談フォームへ
@@ -217,19 +201,9 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                             {/* 相談 CTA card */}
                             <Card className="overflow-hidden border-primary/20 bg-primary/5">
                                 <CardContent className="p-5 text-center">
-                                    <Phone className="mx-auto mb-2 h-8 w-8 text-primary" />
-                                    <h3 className="mb-1 font-bold text-foreground">無料でご相談</h3>
-                                    <p className="mb-3 text-sm text-muted-foreground">
-                                        {COMPANY.businessHours}
-                                    </p>
-                                    <a href={`tel:${COMPANY.phone.replace(/-/g, '')}`}>
-                                        <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10">
-                                            <Phone className="mr-1 h-4 w-4" />
-                                            {COMPANY.phone}
-                                        </Button>
-                                    </a>
+                                    <h3 className="mb-3 font-bold text-foreground">無料でご相談</h3>
                                     <Link href="/contact">
-                                        <Button className="mt-2 w-full">
+                                        <Button className="w-full">
                                             フォームで相談する
                                         </Button>
                                     </Link>

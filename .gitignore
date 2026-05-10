@@ -42,4 +42,4 @@ next-env.d.ts
 
 # scraping artifacts (third-party content / generated SQL)
 /scripts/output/
-/scripts/sample.html
+/scripts/sample*.html

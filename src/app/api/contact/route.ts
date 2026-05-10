@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createLead } from '@/lib/supabase-helpers'
+import { sendLeadNotification } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
@@ -33,6 +34,11 @@ export async function POST(request: Request) {
     
     // createLeadは成功時にデータを返し、失敗時にthrowする
     const data = await createLead(leadData as any)
+
+    // 通知メールを送信（失敗してもリード作成は成功扱い）
+    sendLeadNotification(leadData, data?.id).catch((e) =>
+      console.error('Lead notification failed:', e)
+    )
 
     return NextResponse.json({ success: true, data })
   } catch (error) {

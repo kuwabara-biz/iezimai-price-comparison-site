@@ -1,8 +1,5 @@
-// ===== みんなの家株式会社 連絡先（要変更） =====
 export const COMPANY = {
     name: 'みんなの家株式会社',
-    phone: '0120-000-000', // ← 実際の番号に変更してください
-    businessHours: '受付時間 9:00〜19:00（土日祝も対応）',
 } as const
 
 export const LEAD_STATUS_CONFIG = [

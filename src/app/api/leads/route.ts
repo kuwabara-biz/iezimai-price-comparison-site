@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { sendLeadNotification } from '@/lib/email'
 
 // GET /api/leads - 全リード取得（管理者用）
 export async function GET() {
@@ -36,6 +37,11 @@ export async function POST(request: NextRequest) {
       console.error('Supabase error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    // 通知メールを送信（失敗してもリード作成は成功扱い）
+    sendLeadNotification(body, data?.id).catch((e) =>
+      console.error('Lead notification failed:', e)
+    )
 
     return NextResponse.json(data, { status: 201 })
   } catch (err) {
