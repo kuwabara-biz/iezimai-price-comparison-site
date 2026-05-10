@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scraping artifacts (third-party content / generated SQL)
+/scripts/output/
+/scripts/sample.html
