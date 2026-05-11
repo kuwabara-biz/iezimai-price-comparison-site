@@ -48,39 +48,42 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  /* 家じまい.com カラーパレット — 信頼のネイビー + アクセントオレンジ */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.15 0.02 264);
+  --radius: 0.75rem;
+  /* 家じまい.com カラーパレット — 信頼のネイビー + ウォームオレンジ */
+  --background: oklch(0.995 0.004 75);
+  --foreground: oklch(0.18 0.025 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.02 264);
+  --card-foreground: oklch(0.18 0.025 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 264);
-  --primary: oklch(0.15 0.02 264);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.965 0.003 264);
-  --secondary-foreground: oklch(0.15 0.02 264);
-  --muted: oklch(0.965 0.003 264);
-  --muted-foreground: oklch(0.48 0.015 264);
-  --accent: oklch(0.75 0.16 75);
-  --accent-foreground: oklch(0.15 0.02 264);
+  --popover-foreground: oklch(0.18 0.025 260);
+  /* Primary: 信頼感のあるネイビー（黒すぎず青すぎず） */
+  --primary: oklch(0.28 0.07 255);
+  --primary-foreground: oklch(0.99 0 0);
+  /* Secondary: わずかにウォームなクリーム */
+  --secondary: oklch(0.972 0.008 75);
+  --secondary-foreground: oklch(0.18 0.025 260);
+  --muted: oklch(0.96 0.006 75);
+  --muted-foreground: oklch(0.50 0.018 260);
+  /* Accent: ウォームなテラコッタ寄りオレンジ（SUUMO/HOMES系） */
+  --accent: oklch(0.72 0.17 55);
+  --accent-foreground: oklch(0.18 0.025 260);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.91 0.005 264);
-  --input: oklch(0.91 0.005 264);
-  --ring: oklch(0.75 0.16 75);
-  --chart-1: oklch(0.75 0.16 75);
-  --chart-2: oklch(0.15 0.02 264);
+  --border: oklch(0.91 0.008 75);
+  --input: oklch(0.91 0.008 75);
+  --ring: oklch(0.72 0.17 55);
+  --chart-1: oklch(0.72 0.17 55);
+  --chart-2: oklch(0.28 0.07 255);
   --chart-3: oklch(0.60 0.118 184);
   --chart-4: oklch(0.828 0.189 84);
-  --chart-5: oklch(0.48 0.015 264);
+  --chart-5: oklch(0.50 0.018 260);
   --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.15 0.02 264);
-  --sidebar-primary: oklch(0.15 0.02 264);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.965 0.003 264);
-  --sidebar-accent-foreground: oklch(0.15 0.02 264);
-  --sidebar-border: oklch(0.91 0.005 264);
-  --sidebar-ring: oklch(0.75 0.16 75);
+  --sidebar-foreground: oklch(0.18 0.025 260);
+  --sidebar-primary: oklch(0.28 0.07 255);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.972 0.008 75);
+  --sidebar-accent-foreground: oklch(0.18 0.025 260);
+  --sidebar-border: oklch(0.91 0.008 75);
+  --sidebar-ring: oklch(0.72 0.17 55);
 }
 
 .dark {
@@ -124,5 +127,23 @@
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "palt" 1;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.01em;
+  }
+}
+
+/* セクション見出しの統一ユーティリティ */
+@layer components {
+  .section-eyebrow {
+    @apply text-xs font-semibold tracking-widest text-accent uppercase;
+  }
+  .section-title {
+    @apply text-2xl font-bold text-foreground md:text-3xl;
+  }
+  .section-subtitle {
+    @apply mt-2 text-base text-muted-foreground;
   }
 }
