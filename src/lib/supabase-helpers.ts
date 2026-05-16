@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { COMPANY } from './constants'
 import type { Area, Vendor, Lead, Review, VendorPricePlan, VendorFaq } from './database.types'
 
 // ============================================
@@ -6,12 +7,14 @@ import type { Area, Vendor, Lead, Review, VendorPricePlan, VendorFaq } from './d
 // ============================================
 
 /**
- * 全エリアを取得
+ * 全エリアを取得（北関東は非表示）
+ * リニューアル方針：埼玉県のみのサイトとするため parent_region='north-kanto' を除外
  */
 export async function getAreas() {
   const { data, error } = await supabase
     .from('areas')
     .select('*')
+    .neq('parent_region', 'north-kanto')
     .order('order_index', { ascending: true })
 
   if (error) throw error
@@ -19,13 +22,14 @@ export async function getAreas() {
 }
 
 /**
- * スラッグでエリアを取得
+ * スラッグでエリアを取得（北関東 slug の場合は notFound）
  */
 export async function getAreaBySlug(slug: string) {
   const { data, error } = await supabase
     .from('areas')
     .select('*')
     .eq('slug', slug)
+    .neq('parent_region', 'north-kanto')
     .single()
 
   if (error) throw error
@@ -37,7 +41,38 @@ export async function getAreaBySlug(slug: string) {
 // ============================================
 
 /**
+ * 北関東エリアの slug 一覧を取得（業者フィルタ用キャッシュ）
+ */
+async function getNorthKantoSlugs(): Promise<Set<string>> {
+  const { data } = await supabase
+    .from('areas')
+    .select('slug')
+    .eq('parent_region', 'north-kanto')
+  return new Set((data ?? []).map((a) => a.slug as string))
+}
+
+const NORTH_KANTO_PREFECTURE_NAMES = ['群馬県', '栃木県', '茨城県'] as const
+
+/**
+ * 北関東の業者か判定（住所 or service_areas で判定）
+ * - address に「群馬県/栃木県/茨城県」を含む → 除外
+ * - service_areas が全て北関東 slug → 除外
+ * - それ以外（埼玉サービスエリア含む / 不明）→ 表示
+ */
+function isNorthKantoVendor(v: Vendor, northKantoSlugs: Set<string>): boolean {
+  if (v.address && NORTH_KANTO_PREFECTURE_NAMES.some((p) => v.address!.includes(p))) {
+    return true
+  }
+  if (v.service_areas && v.service_areas.length > 0) {
+    return v.service_areas.every((slug) => northKantoSlugs.has(slug))
+  }
+  return false
+}
+
+/**
  * 全業者を取得
+ * - 自社「みんなのいえ株式会社」を除外
+ * - 北関東の業者を除外（address ベース + service_areas が全て北関東のケース）
  */
 export async function getVendors() {
   const { data, error } = await supabase
@@ -46,11 +81,17 @@ export async function getVendors() {
     .order('rating', { ascending: false })
 
   if (error) throw error
-  return data as Vendor[]
+
+  const northKantoSlugs = await getNorthKantoSlugs()
+
+  return (data ?? [])
+    .filter((v) => v.name !== COMPANY.name)
+    .filter((v) => !isNorthKantoVendor(v as Vendor, northKantoSlugs)) as Vendor[]
 }
 
 /**
  * エリアで業者を絞り込み
+ * - 自社・北関東業者を除外
  */
 export async function getVendorsByArea(areaSlug: string) {
   const { data, error } = await supabase
@@ -60,7 +101,12 @@ export async function getVendorsByArea(areaSlug: string) {
     .order('rating', { ascending: false })
 
   if (error) throw error
-  return data as Vendor[]
+
+  const northKantoSlugs = await getNorthKantoSlugs()
+
+  return (data ?? [])
+    .filter((v) => v.name !== COMPANY.name)
+    .filter((v) => !isNorthKantoVendor(v as Vendor, northKantoSlugs)) as Vendor[]
 }
 
 /**

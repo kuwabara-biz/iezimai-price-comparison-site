@@ -1,13 +1,13 @@
 // ============================================
 // 家じまい.com モックデータ
-// Supabase接続前の開発用ダミーデータ
+// 主に admin/reviews ページのプレースホルダー用
+// （本番リード/レビューは Supabase 経由で取得）
 // ============================================
 
 import { Area, Vendor, Review } from "./database.types";
 
-// エリアデータ
+// エリアデータ（埼玉県のみ）
 export const mockAreas: Area[] = [
-  // 埼玉県主要都市
   { id: "a1", name: "さいたま市", slug: "saitama-shi", parent_region: "saitama", order_index: 1 },
   { id: "a2", name: "川口市", slug: "kawaguchi-shi", parent_region: "saitama", order_index: 2 },
   { id: "a3", name: "川越市", slug: "kawagoe-shi", parent_region: "saitama", order_index: 3 },
@@ -28,13 +28,9 @@ export const mockAreas: Area[] = [
   { id: "a18", name: "蕨市", slug: "warabi-shi", parent_region: "saitama", order_index: 18 },
   { id: "a19", name: "戸田市", slug: "toda-shi", parent_region: "saitama", order_index: 19 },
   { id: "a20", name: "その他埼玉県", slug: "saitama-other", parent_region: "saitama", order_index: 99 },
-  // 北関東
-  { id: "a21", name: "群馬県", slug: "gunma", parent_region: "north-kanto", order_index: 101 },
-  { id: "a22", name: "栃木県", slug: "tochigi", parent_region: "north-kanto", order_index: 102 },
-  { id: "a23", name: "茨城県", slug: "ibaraki", parent_region: "north-kanto", order_index: 103 },
 ];
 
-// 業者データ
+// 業者データ（埼玉県内のみ）
 export const mockVendors: Vendor[] = [
   {
     id: "v1",
@@ -84,9 +80,9 @@ export const mockVendors: Vendor[] = [
     id: "v3",
     name: "関東ライフサポート",
     slug: "kanto-life-support",
-    description: "埼玉全域＋北関東をカバーする広域対応業者。大型案件にも対応可能です。",
+    description: "埼玉全域をカバーする広域対応業者。大型案件にも対応可能です。",
     features: ["即日対応", "不動産買取可", "さいたま市粗大ゴミ搬出対応", "見積無料"],
-    service_areas: ["saitama-shi", "kawaguchi-shi", "koshigaya-shi", "souka-shi", "kasukabe-shi", "gunma", "tochigi"],
+    service_areas: ["saitama-shi", "kawaguchi-shi", "koshigaya-shi", "souka-shi", "kasukabe-shi"],
     rating: 4.2,
     min_price: 25000,
     has_real_estate_partnership: true,
@@ -135,28 +131,6 @@ export const mockVendors: Vendor[] = [
     min_price: 28000,
     has_real_estate_partnership: false,
     phone: "048-000-0005",
-    website_url: null,
-    image_url: null,
-    address: null,
-    representative_name: null,
-    business_hours: null,
-    established_year: null,
-    employee_count: null,
-    certifications: null,
-    staff_message: null,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: "v6",
-    name: "北関東遺品サポート",
-    slug: "kitakanto-ihin-support",
-    description: "群馬・栃木・茨城の北関東3県をカバー。地方ならではの広い物件にも対応。",
-    features: ["即日対応", "不動産買取可", "解体工事対応", "車両処分対応"],
-    service_areas: ["gunma", "tochigi", "ibaraki", "kumagaya-shi", "fukaya-shi"],
-    rating: 4.1,
-    min_price: 20000,
-    has_real_estate_partnership: true,
-    phone: "027-000-0006",
     website_url: null,
     image_url: null,
     address: null,
@@ -218,7 +192,7 @@ export const mockVendors: Vendor[] = [
     slug: "kumagaya-fudosan-ihin",
     description: "不動産会社が母体の遺品整理業者。空き家の売却・解体まで一気通貫で対応。",
     features: ["不動産買取可", "解体工事対応", "空き家管理", "見積無料"],
-    service_areas: ["kumagaya-shi", "fukaya-shi", "ageo-shi", "gunma"],
+    service_areas: ["kumagaya-shi", "fukaya-shi", "ageo-shi"],
     rating: 4.4,
     min_price: 30000,
     has_real_estate_partnership: true,
@@ -258,14 +232,13 @@ export const mockVendors: Vendor[] = [
   },
 ];
 
-// 口コミデータ
+// 口コミデータ（埼玉県内のみ）
 export const mockReviews: Review[] = [
   { id: "r1", vendor_id: "v1", area_slug: "saitama-shi", nickname: "T.K.", rating: 5, body: "母の遺品整理をお願いしました。丁寧に一つ一つ確認してくださり、大切な写真も見つけていただけました。", is_approved: true, created_at: "2025-12-01T00:00:00Z" },
   { id: "r2", vendor_id: "v1", area_slug: "kawaguchi-shi", nickname: "M.S.", rating: 4, body: "見積もりから作業完了まで迅速でした。料金も適正だと思います。", is_approved: true, created_at: "2025-11-15T00:00:00Z" },
   { id: "r3", vendor_id: "v2", area_slug: "kawagoe-shi", nickname: "H.N.", rating: 5, body: "実家の片付けと不動産売却を一括でお願いできて助かりました。川越の相場にも詳しく信頼できました。", is_approved: true, created_at: "2025-10-20T00:00:00Z" },
   { id: "r4", vendor_id: "v4", area_slug: "saitama-shi", nickname: "Y.A.", rating: 5, body: "女性スタッフの方が対応してくれて、母も安心していました。遺品の供養もしていただき感謝です。", is_approved: true, created_at: "2025-12-10T00:00:00Z" },
   { id: "r5", vendor_id: "v3", area_slug: "koshigaya-shi", nickname: "K.T.", rating: 4, body: "広い一軒家でしたが、チームで手早く対応してくれました。不動産の相談にも乗ってもらえました。", is_approved: true, created_at: "2025-11-01T00:00:00Z" },
-  { id: "r6", vendor_id: "v6", area_slug: "gunma", nickname: "S.M.", rating: 4, body: "群馬の実家の整理をお願いしました。遠方からの依頼でしたが、写真で進捗報告してくれて安心でした。", is_approved: true, created_at: "2025-09-05T00:00:00Z" },
   { id: "r7", vendor_id: "v7", area_slug: "kawagoe-shi", nickname: "R.I.", rating: 5, body: "仏壇の魂抜きもお坊さんを手配してくださり、全てお任せできました。", is_approved: true, created_at: "2025-11-20T00:00:00Z" },
   { id: "r8", vendor_id: "v9", area_slug: "kumagaya-shi", nickname: "A.O.", rating: 4, body: "空き家になった実家を整理から売却まで一括で対応してもらいました。地元の不動産相場に詳しいのが心強かったです。", is_approved: true, created_at: "2025-10-15T00:00:00Z" },
 ];

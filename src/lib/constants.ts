@@ -1,5 +1,15 @@
+export const SITE = {
+    name: '家じまい.com',
+    fullName: '家じまい.com｜埼玉県の家じまい総合相談窓口',
+    tagline: '埼玉県の家じまい総合相談窓口',
+    url: 'https://iezimai.com',
+    titleDefault: '家じまい.com｜埼玉県の遺品整理・相続不動産・終活の専門相談窓口',
+    description:
+        '埼玉県の40〜60代の家じまいをワンストップでサポート。遺品整理・相続不動産の処分・終活まで、家じまい.comが無料でご相談に応じます。',
+} as const
+
 export const COMPANY = {
-    name: 'みんなの家株式会社',
+    name: 'みんなのいえ株式会社',
 } as const
 
 export const LEAD_STATUS_CONFIG = [

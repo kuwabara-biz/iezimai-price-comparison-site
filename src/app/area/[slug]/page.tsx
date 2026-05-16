@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Star, Building, MapPin, ArrowRight, MessageCircle } from "lucide-react";
+import { Star, Building, MapPin, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -65,10 +65,12 @@ export default async function AreaPage({ params }: AreaPageProps) {
                                     <p className="text-muted-foreground">
                                         現在、{area.name}に対応可能な業者は登録されていません。
                                     </p>
-                                    <Button className="mt-4 bg-accent text-accent-foreground hover:bg-accent/90">
-                                        <MessageCircle className="mr-2 h-4 w-4" />
-                                        LINEで直接ご相談ください
-                                    </Button>
+                                    <Link href="/contact">
+                                        <Button className="mt-4 bg-accent text-accent-foreground hover:bg-accent/90">
+                                            <Mail className="mr-2 h-4 w-4" />
+                                            お問い合わせフォームから相談する
+                                        </Button>
+                                    </Link>
                                 </CardContent>
                             </Card>
                         ) : (
@@ -155,15 +157,18 @@ export default async function AreaPage({ params }: AreaPageProps) {
                                     {area.name}の遺品整理、まだ迷っていますか？
                                 </h3>
                                 <p className="mb-4 text-sm text-muted-foreground">
-                                    写真を送るだけで地元のプロが概算見積もりをお出しします
+                                    まずは無料相談で、ご希望に合った業者をご紹介します
                                 </p>
-                                <Button
-                                    size="lg"
-                                    className="bg-[#06C755] text-white hover:bg-[#06C755]/90"
-                                >
-                                    <MessageCircle className="mr-2 h-5 w-5" />
-                                    LINEで無料相談
-                                </Button>
+                                <Link href="/contact">
+                                    <Button
+                                        size="lg"
+                                        className="bg-accent text-accent-foreground hover:bg-accent/90"
+                                    >
+                                        <Mail className="mr-2 h-5 w-5" />
+                                        無料で個別相談する
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </Link>
                             </CardContent>
                         </Card>
                     </div>

@@ -540,7 +540,7 @@ export default async function VendorPage({ params }: VendorPageProps) {
                                             この業者に相談する
                                         </h3>
                                         <p className="text-base text-muted-foreground mb-4 text-center">
-                                            みんなの家株式会社が窓口対応します
+                                            みんなのいえ株式会社が窓口対応します
                                         </p>
                                         <Link href="/contact">
                                             <Button className="w-full text-base h-12">

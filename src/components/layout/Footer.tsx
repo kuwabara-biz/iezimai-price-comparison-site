@@ -1,20 +1,8 @@
 import Link from "next/link";
-import { Home, MapPin, Mail, ArrowRight } from "lucide-react";
-import { getAreas } from "@/lib/supabase-helpers";
+import { Home } from "lucide-react";
+import { SITE, COMPANY } from "@/lib/constants";
 
-export async function Footer() {
-    let areas: Awaited<ReturnType<typeof getAreas>> = [];
-    try {
-        areas = await getAreas();
-    } catch {
-        areas = [];
-    }
-
-    const saitamaAreas = areas
-        .filter((a) => a.parent_region === "saitama")
-        .slice(0, 10);
-    const northKantoAreas = areas.filter((a) => a.parent_region === "north-kanto");
-
+export function Footer() {
     return (
         <footer className="relative overflow-hidden border-t border-border bg-gradient-to-br from-primary to-[oklch(0.18_0.07_255)] text-primary-foreground">
             {/* 背景装飾 */}
@@ -34,8 +22,8 @@ export async function Footer() {
 
             <div className="container relative mx-auto px-4 py-12">
                 <div className="grid gap-8 md:grid-cols-4">
-                    {/* Logo & Description */}
-                    <div className="md:col-span-1">
+                    {/* 列1: サイト情報 */}
+                    <div>
                         <Link href="/" className="flex items-center gap-2">
                             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent shadow-sm">
                                 <Home className="h-4 w-4 text-accent-foreground" />
@@ -43,103 +31,126 @@ export async function Footer() {
                             <span className="text-lg font-bold tracking-tight">家じまい.com</span>
                         </Link>
                         <p className="mt-3 text-sm leading-relaxed text-primary-foreground/70">
-                            埼玉・北関東エリアに特化した遺品整理業者比較＆空き家解決サイト
+                            {SITE.tagline}
                         </p>
-                        <Link href="/contact">
-                            <div className="mt-4 inline-flex items-center gap-1 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90">
-                                <Mail className="h-3.5 w-3.5" />
-                                無料相談する
-                                <ArrowRight className="h-3.5 w-3.5" />
-                            </div>
-                        </Link>
+                        <div className="mt-4 space-y-1.5 text-sm text-primary-foreground/70">
+                            <p>運営：{COMPANY.name}</p>
+                            <p>所在地：埼玉県朝霞市</p>
+                            <p className="text-xs text-primary-foreground/50">
+                                ※ 詳細は会社概要をご覧ください
+                            </p>
+                        </div>
                     </div>
 
-                    {/* 埼玉エリア */}
-                    <div>
-                        <h3 className="mb-3 flex items-center gap-1.5 text-xs font-bold tracking-widest text-accent">
-                            <MapPin className="h-3 w-3" />
-                            埼玉県の対応エリア
-                        </h3>
-                        <ul className="space-y-1.5">
-                            {saitamaAreas.map((area) => (
-                                <li key={area.slug}>
-                                    <Link
-                                        href={`/area/${area.slug}`}
-                                        className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
-                                    >
-                                        {area.name}の遺品整理
-                                    </Link>
-                                </li>
-                            ))}
-                            {areas.filter((a) => a.parent_region === "saitama").length > 10 && (
-                                <li>
-                                    <Link
-                                        href="/#search"
-                                        className="text-sm font-semibold text-accent hover:underline"
-                                    >
-                                        全エリアを見る →
-                                    </Link>
-                                </li>
-                            )}
-                        </ul>
-                    </div>
-
-                    {/* 北関東エリア */}
-                    <div>
-                        <h3 className="mb-3 flex items-center gap-1.5 text-xs font-bold tracking-widest text-accent">
-                            <MapPin className="h-3 w-3" />
-                            北関東の対応エリア
-                        </h3>
-                        <ul className="space-y-1.5">
-                            {northKantoAreas.map((area) => (
-                                <li key={area.slug}>
-                                    <Link
-                                        href={`/area/${area.slug}`}
-                                        className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
-                                    >
-                                        {area.name}の遺品整理
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* サービス */}
+                    {/* 列2: サービス */}
                     <div>
                         <h3 className="mb-3 text-xs font-bold tracking-widest text-accent">
                             サービス
                         </h3>
-                        <ul className="space-y-1.5">
-                            <li>
-                                <Link
-                                    href="/#search"
-                                    className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
-                                >
-                                    エリアから業者を探す
-                                </Link>
-                            </li>
+                        <ul className="space-y-2">
                             <li>
                                 <Link
                                     href="/contact"
                                     className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
                                 >
-                                    無料一括相談
+                                    無料個別相談
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    href="/#flow"
+                                    href="/#vendors"
                                     className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
                                 >
+                                    遺品整理業者を探す
+                                </Link>
+                            </li>
+                            {/* TODO: /flow ページ作成後にリンクを有効化 */}
+                            {/*
+                            <li>
+                                <Link href="/flow" className="text-sm text-primary-foreground/70 transition-colors hover:text-accent">
                                     ご利用の流れ
                                 </Link>
                             </li>
+                            */}
+                            {/* TODO: /faq ページ作成後にリンクを有効化 */}
+                            {/*
+                            <li>
+                                <Link href="/faq" className="text-sm text-primary-foreground/70 transition-colors hover:text-accent">
+                                    よくあるご質問
+                                </Link>
+                            </li>
+                            */}
+                        </ul>
+                    </div>
+
+                    {/* 列3: 家じまいを学ぶ */}
+                    <div>
+                        <h3 className="mb-3 text-xs font-bold tracking-widest text-accent">
+                            家じまいを学ぶ
+                        </h3>
+                        <ul className="space-y-2">
                             <li>
                                 <Link
                                     href="/#about"
                                     className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
                                 >
-                                    家じまいとは？
+                                    家じまいとは
+                                </Link>
+                            </li>
+                            <li>
+                                <span className="text-sm text-primary-foreground/40">
+                                    相続不動産について（準備中）
+                                </span>
+                            </li>
+                            <li>
+                                <span className="text-sm text-primary-foreground/40">
+                                    終活について（準備中）
+                                </span>
+                            </li>
+                            <li>
+                                <span className="text-sm text-primary-foreground/40">
+                                    埼玉県の家じまい事情（準備中）
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* 列4: 会社情報 */}
+                    <div>
+                        <h3 className="mb-3 text-xs font-bold tracking-widest text-accent">
+                            会社情報
+                        </h3>
+                        <ul className="space-y-2">
+                            <li>
+                                <Link
+                                    href="/about"
+                                    className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
+                                >
+                                    サービス案内
+                                </Link>
+                            </li>
+                            {/* TODO: /company ページ作成後にリンクを有効化 */}
+                            {/*
+                            <li>
+                                <Link href="/company" className="text-sm text-primary-foreground/70 transition-colors hover:text-accent">
+                                    会社概要
+                                </Link>
+                            </li>
+                            */}
+                            <li>
+                                <Link
+                                    href="/legal/privacy"
+                                    className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
+                                >
+                                    個人情報保護方針
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/legal/tokushou"
+                                    className="text-sm text-primary-foreground/70 transition-colors hover:text-accent"
+                                >
+                                    特定商取引法に基づく表記
                                 </Link>
                             </li>
                         </ul>
@@ -147,8 +158,8 @@ export async function Footer() {
                 </div>
 
                 <div className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-primary-foreground/10 pt-6 text-xs text-primary-foreground/60 md:flex-row">
-                    <p>© 2026 家じまい.com All rights reserved.</p>
-                    <p>埼玉・北関東の遺品整理・空き家買取プラットフォーム</p>
+                    <p>© 2026 家じまい.com（{COMPANY.name}）All rights reserved.</p>
+                    <p>{SITE.tagline}</p>
                 </div>
             </div>
         </footer>

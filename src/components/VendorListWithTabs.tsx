@@ -8,43 +8,12 @@ import {
     Building,
     ArrowRight,
     MapPin,
-    Filter,
-    TrendingDown,
-    MessageSquare,
     Crown,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Vendor, Area } from '@/lib/database.types'
-
-type TabKey = 'recommended' | 'reviews' | 'price' | 'realestate'
-
-const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
-    { key: 'recommended', label: 'おすすめ順', icon: <Star className="h-4 w-4" /> },
-    { key: 'reviews', label: '口コミ順', icon: <MessageSquare className="h-4 w-4" /> },
-    { key: 'price', label: '料金が安い順', icon: <TrendingDown className="h-4 w-4" /> },
-    { key: 'realestate', label: '不動産提携あり', icon: <Building className="h-4 w-4" /> },
-]
-
-function sortVendors(vendors: Vendor[], tab: TabKey): Vendor[] {
-    switch (tab) {
-        case 'recommended':
-        case 'reviews':
-            return [...vendors].sort((a, b) => b.rating - a.rating)
-        case 'price':
-            return [
-                ...[...vendors]
-                    .filter((v) => v.min_price != null)
-                    .sort((a, b) => a.min_price! - b.min_price!),
-                ...[...vendors].filter((v) => v.min_price == null),
-            ]
-        case 'realestate':
-            return [...vendors]
-                .filter((v) => v.has_real_estate_partnership)
-                .sort((a, b) => b.rating - a.rating)
-    }
-}
 
 const RANK_STYLE: Record<number, string> = {
     0: 'bg-gradient-to-b from-yellow-300 to-yellow-500 text-yellow-950 ring-2 ring-yellow-500/40',
@@ -61,9 +30,12 @@ interface Props {
 }
 
 export default function VendorListWithTabs({ vendors, areas }: Props) {
-    const [activeTab, setActiveTab] = useState<TabKey>('recommended')
     const [visibleCount, setVisibleCount] = useState(8)
-    const sorted = sortVendors(vendors, activeTab)
+    // 総合評価順のみ（旧並び順は廃止）
+    const sorted = useMemo(
+        () => [...vendors].sort((a, b) => b.rating - a.rating),
+        [vendors]
+    )
     const visible = sorted.slice(0, visibleCount)
 
     const ratingDist = useMemo(() => {
@@ -76,48 +48,28 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
     }, [vendors])
     const maxBucket = Math.max(1, ...ratingDist)
 
-    const saitamaAreas = areas.filter((a) => a.parent_region === 'saitama').slice(0, 6)
-    const northKantoAreas = areas.filter((a) => a.parent_region === 'north-kanto')
+    const saitamaAreas = areas.filter((a) => a.parent_region === 'saitama').slice(0, 8)
 
     return (
-        <section className="bg-secondary py-10 md:py-14">
+        <section id="vendors" className="bg-white py-12 md:py-16">
             <div className="container mx-auto px-4">
-                <div className="mb-1 text-center">
+                <div className="mb-8 text-center md:mb-10">
                     <span className="section-eyebrow">VENDORS</span>
-                </div>
-                <div className="mb-6 text-center md:mb-8">
-                    <h2 className="section-title">遺品整理業者一覧</h2>
-                    <p className="section-subtitle">埼玉・北関東エリアの審査済み業者</p>
+                    <h2 className="mt-2 section-title">
+                        審査済みの遺品整理業者から探す
+                    </h2>
                 </div>
 
-                {/* Tab pills + result count */}
-                <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <div className="flex gap-2 overflow-x-auto pb-1">
-                        {TABS.map((tab) => (
-                            <button
-                                key={tab.key}
-                                onClick={() => {
-                                    setActiveTab(tab.key)
-                                    setVisibleCount(8)
-                                }}
-                                className={`flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
-                                    activeTab === tab.key
-                                        ? 'border-primary bg-primary text-primary-foreground shadow-md'
-                                        : 'border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground'
-                                }`}
-                            >
-                                {tab.icon}
-                                {tab.label}
-                            </button>
-                        ))}
+                {/* 結果件数 + 並び順表示 */}
+                <div className="mb-5 flex items-center justify-between">
+                    <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-sm font-semibold text-foreground">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        総合評価順
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Filter className="h-4 w-4" />
-                        <span>
-                            該当{' '}
-                            <span className="font-bold tabular-nums text-foreground">{sorted.length}</span>{' '}
-                            社
-                        </span>
+                    <div className="text-sm text-muted-foreground">
+                        該当{' '}
+                        <span className="font-bold tabular-nums text-foreground">{sorted.length}</span>{' '}
+                        社
                     </div>
                 </div>
 
@@ -187,7 +139,6 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                                                                     </Badge>
                                                                 )}
                                                             </div>
-                                                            {/* Rating + price inline */}
                                                             <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
                                                                 <div className="flex items-center gap-1">
                                                                     {[...Array(5)].map((_, i) => (
@@ -311,7 +262,7 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                                     </p>
                                     <h3 className="mb-1 text-lg font-bold text-white">無料でご相談</h3>
                                     <p className="mb-3 text-xs text-white/70">
-                                        24時間受付・最短即日対応
+                                        専門家が直接お伺いします
                                     </p>
                                     <Link href="/contact">
                                         <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
@@ -356,7 +307,7 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                                 </CardContent>
                             </Card>
 
-                            {/* Area quick links */}
+                            {/* Area quick links（埼玉県のみ） */}
                             <Card>
                                 <CardContent className="p-4">
                                     <h3 className="mb-3 flex items-center gap-1.5 text-sm font-bold text-foreground">
@@ -368,19 +319,6 @@ export default function VendorListWithTabs({ vendors, areas }: Props) {
                                             埼玉県
                                         </p>
                                         {saitamaAreas.map((area) => (
-                                            <Link
-                                                key={area.slug}
-                                                href={`/area/${area.slug}`}
-                                                className="flex items-center justify-between py-1 text-sm text-foreground transition-colors hover:text-accent"
-                                            >
-                                                <span>{area.name}</span>
-                                                <ArrowRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                                            </Link>
-                                        ))}
-                                        <p className="pb-1 pt-2 text-[10px] font-semibold tracking-wider text-muted-foreground">
-                                            北関東
-                                        </p>
-                                        {northKantoAreas.map((area) => (
                                             <Link
                                                 key={area.slug}
                                                 href={`/area/${area.slug}`}

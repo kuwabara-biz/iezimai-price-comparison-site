@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE } from "@/lib/constants";
 
 const notoSansJP = Noto_Sans_JP({
   variable: "--font-geist-sans",
@@ -12,25 +13,39 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE.url),
   title: {
-    default: "家じまい.com | 埼玉・北関東の遺品整理業者比較・空き家買取",
-    template: "%s | 家じまい.com",
+    default: SITE.titleDefault,
+    template: `%s | ${SITE.name}`,
   },
-  description:
-    "埼玉・北関東エリアに特化した遺品整理業者比較サイト。地元を知り尽くした優良業者のみを厳選掲載。口コミ・料金で比較して最適な業者を見つけられます。空き家の買取・解体もご相談ください。",
+  description: SITE.description,
   keywords: [
+    "家じまい",
+    "埼玉県",
     "遺品整理",
-    "埼玉",
-    "北関東",
-    "空き家買取",
+    "相続不動産",
+    "空き家",
+    "終活",
+    "朝霞市",
     "実家じまい",
-    "さいたま市",
-    "川口市",
-    "川越市",
-    "群馬",
-    "栃木",
-    "茨城",
   ],
+  openGraph: {
+    type: "website",
+    locale: "ja_JP",
+    url: SITE.url,
+    siteName: SITE.fullName,
+    title: SITE.titleDefault,
+    description: SITE.description,
+    // TODO: 本番用 OGP 画像（1200x630px）を /public/og-image.png に配置して差し替え
+    images: ["/og-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.titleDefault,
+    description: SITE.description,
+    // TODO: 本番用 OGP 画像を /public/og-image.png に配置して差し替え
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
