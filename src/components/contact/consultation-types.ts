@@ -4,9 +4,9 @@
 
 export const TYPE_OPTIONS = [
     { value: "ihinseiri", label: "遺品整理について" },
-    { value: "real-estate", label: "相続不動産の処分について" },
-    { value: "shukatsu", label: "終活・死後事務について" },
-    { value: "other", label: "その他" },
+    { value: "real-estate", label: "相続不動産の処分・買取について" },
+    { value: "both", label: "遺品整理 + 不動産処分の両方" },
+    { value: "other", label: "その他（終活など）" },
 ] as const;
 
 export type TypeValue = (typeof TYPE_OPTIONS)[number]["value"];

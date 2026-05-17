@@ -1,62 +1,95 @@
-import { Scale, Workflow, MapPin, MessageCircle } from "lucide-react";
+"use client";
+
+import { motion } from "motion/react";
+import { Handshake, MapPinned, Workflow, Wallet } from "lucide-react";
 
 const REASONS = [
     {
         num: "01",
-        icon: Scale,
-        title: "比較サイトを超えた、専門相談窓口",
-        body: "単なる業者リストではなく、お客様の状況全体を整理してから業者をご提案します。「何から始めればよいかわからない」「複数業者にバラバラに連絡するのは大変」——そんな段階のご相談こそ、お気軽にお寄せください。",
+        icon: Workflow,
+        title: "遺品整理から不動産買取まで自社対応",
+        body: "外注の取りまとめではなく、家じまい.com（みんなのいえ株式会社）が遺品整理も不動産買取も自社で実施。窓口がひとつで完結します。",
+        accent: "from-rose-100 to-rose-50",
+        accentText: "text-rose-500",
+        ringColor: "ring-rose-200",
     },
     {
         num: "02",
-        icon: Workflow,
-        title: "遺品整理から不動産処分までワンストップ",
-        body: "複数の業者・専門家とのやりとりを、当窓口が一括で調整します。お客様は「窓口がひとつ」で済むため、何度も同じ説明を繰り返す必要がありません。",
+        icon: Wallet,
+        title: "自社買取だから中間マージン・仲介手数料ゼロ",
+        body: "不動産は当社が直接買取します。仲介を挟まないため、お客様の手取り額が増えやすい構造です。早期現金化にも対応。",
+        accent: "from-amber-100 to-amber-50",
+        accentText: "text-amber-600",
+        ringColor: "ring-amber-200",
     },
     {
         num: "03",
-        icon: MapPin,
-        title: "埼玉県を熟知した地域密着",
-        body: "朝霞市を拠点に、埼玉県全域の地域事情・行政手続き・市場相場に精通しています。県内のケアマネジャー・地域包括支援センターとも連携を進めています。",
+        icon: MapPinned,
+        title: "朝霞市拠点・埼玉県全域に精通",
+        body: "県内の自治体ルール・清掃工場・買取相場・空き家事情を熟知。地元密着だからこそ、迅速な現地調査と的確なご提案が可能です。",
+        accent: "from-emerald-100 to-emerald-50",
+        accentText: "text-emerald-600",
+        ringColor: "ring-emerald-200",
     },
     {
         num: "04",
-        icon: MessageCircle,
-        title: "ご相談はすべて無料、しつこい営業はしません",
-        body: "電話・メール・オンライン（Zoom）でのご相談はすべて無料です。ご納得いただいてから業者をご紹介するため、強引な営業や契約の急かしは一切ありません。",
+        icon: Handshake,
+        title: "ご相談無料・しつこい営業はしません",
+        body: "「まだ何も決まっていない」段階のご相談こそ大歓迎。お見積もり後の押し売り、強引な契約催促は一切ありません。",
+        accent: "from-blue-100 to-blue-50",
+        accentText: "text-blue-600",
+        ringColor: "ring-blue-200",
     },
 ] as const;
 
 export default function WhyUs() {
     return (
-        <section className="bg-white py-12 md:py-16">
+        <section id="why" className="bg-white py-16 md:py-24">
             <div className="container mx-auto px-4">
-                <div className="mb-10 text-center md:mb-12">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-12 text-center md:mb-16"
+                >
                     <span className="section-eyebrow">WHY US</span>
                     <h2 className="mt-2 section-title">
                         家じまい.comが選ばれる4つの理由
                     </h2>
-                </div>
+                    <p className="section-subtitle mx-auto max-w-2xl">
+                        埼玉県の実家じまいで、お客様の負担をいちばん軽くする座組みを整えています。
+                    </p>
+                </motion.div>
+
                 <div className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2 md:gap-6">
-                    {REASONS.map((r) => {
+                    {REASONS.map((r, i) => {
                         const Icon = r.icon;
                         return (
-                            <div
+                            <motion.div
                                 key={r.num}
-                                className="relative overflow-hidden rounded-2xl border border-border bg-white p-6 shadow-sm transition-shadow hover:shadow-md md:p-8"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-60px" }}
+                                transition={{ duration: 0.5, delay: i * 0.08 }}
+                                className="group relative overflow-hidden rounded-2xl border border-border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl md:p-8"
                             >
                                 <span
                                     aria-hidden
-                                    className="absolute -right-2 -top-3 select-none text-7xl font-black text-primary/[0.05]"
+                                    className="absolute -right-3 -top-4 select-none text-7xl font-black text-primary/[0.05] transition-colors group-hover:text-accent/[0.08]"
                                 >
                                     {r.num}
                                 </span>
                                 <div className="relative">
                                     <div className="mb-4 flex items-center gap-3">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent ring-1 ring-accent/10">
-                                            <Icon className="h-6 w-6" />
+                                        <div
+                                            className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${r.accent} ${r.accentText} ring-2 ${r.ringColor} transition-transform group-hover:scale-110`}
+                                        >
+                                            <Icon className="h-7 w-7" strokeWidth={1.8} />
                                         </div>
-                                        <span className="text-xs font-bold tracking-widest text-accent">
+                                        <span
+                                            className={`text-xs font-bold tracking-widest ${r.accentText}`}
+                                        >
                                             {r.num}
                                         </span>
                                     </div>
@@ -67,7 +100,7 @@ export default function WhyUs() {
                                         {r.body}
                                     </p>
                                 </div>
-                            </div>
+                            </motion.div>
                         );
                     })}
                 </div>

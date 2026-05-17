@@ -1,16 +1,20 @@
-import { getAreas, getVendors } from '@/lib/supabase-helpers'
 import { SITE, COMPANY } from '@/lib/constants'
 import Hero from '@/components/home/Hero'
-import ConsultationEntry from '@/components/home/ConsultationEntry'
+import ProblemSection from '@/components/home/ProblemSection'
+import FlowSection from '@/components/home/FlowSection'
 import WhyUs from '@/components/home/WhyUs'
-import AboutIejimai from '@/components/home/AboutIejimai'
-import AreaList from '@/components/home/AreaList'
+import ServiceSection from '@/components/home/ServiceSection'
+import PricingSection from '@/components/home/PricingSection'
+import CasesSection from '@/components/home/CasesSection'
+import AreaSection from '@/components/home/AreaSection'
+import FAQSection from '@/components/home/FAQSection'
+import { HOME_FAQ_ITEMS } from '@/components/home/faq-data'
 import BottomCTA from '@/components/home/BottomCTA'
-import VendorListWithTabs from '@/components/VendorListWithTabs'
+import TableOfContents from '@/components/home/TableOfContents'
 
 const organizationJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'LocalBusiness',
     name: SITE.name,
     legalName: COMPANY.name,
     url: SITE.url,
@@ -33,24 +37,42 @@ const organizationJsonLd = {
     },
 }
 
-export default async function HomePage() {
-    const [areas, vendors] = await Promise.all([getAreas(), getVendors()])
+const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: HOME_FAQ_ITEMS.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+            '@type': 'Answer',
+            text: f.a,
+        },
+    })),
+}
 
+export default function HomePage() {
     return (
         <div className="min-h-screen">
-            {/* JSON-LD: Organization 構造化データ */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
             />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+            />
 
             <Hero />
-            <ConsultationEntry />
+            <ProblemSection />
+            <FlowSection />
             <WhyUs />
-            <AboutIejimai />
-            <VendorListWithTabs vendors={vendors} areas={areas} />
-            <AreaList areas={areas} vendors={vendors} />
+            <ServiceSection />
+            <PricingSection />
+            <CasesSection />
+            <AreaSection />
+            <FAQSection />
             <BottomCTA />
+            <TableOfContents />
         </div>
     )
 }

@@ -3,28 +3,34 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceList from "@/components/about/ServiceList";
-import PartnerNetwork from "@/components/about/PartnerNetwork";
-import { SITE } from "@/lib/constants";
+import { SITE, COMPANY } from "@/lib/constants";
 
 const DESCRIPTION =
-    "家じまい.comが提供するご相談内容（遺品整理・相続不動産の処分・終活）と、連携している専門家ネットワークをご紹介します。";
+    "家じまい.comを運営するみんなのいえ株式会社の会社案内。埼玉県朝霞市を拠点に、遺品整理・相続不動産の買取をワンストップで提供しています。";
 
 export const metadata: Metadata = {
-    title: { absolute: "サービス案内｜家じまい.com" },
+    title: { absolute: "会社案内｜家じまい.com" },
     description: DESCRIPTION,
     alternates: { canonical: "/about" },
     openGraph: {
-        title: "サービス案内｜家じまい.com",
+        title: "会社案内｜家じまい.com",
         description: DESCRIPTION,
         url: `${SITE.url}/about`,
         type: "website",
     },
 };
 
+const COMPANY_INFO = [
+    { label: "会社名", value: COMPANY.name },
+    { label: "サービス名", value: "家じまい.com" },
+    { label: "所在地", value: COMPANY.address },
+    { label: "事業内容", value: "遺品整理・相続不動産の買取・空き家管理・解体手配" },
+    { label: "対応エリア", value: "埼玉県全域" },
+];
+
 export default function AboutPage() {
     return (
         <div className="min-h-screen">
-            {/* 1. ヒーロー */}
             <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-[oklch(0.22_0.07_255)] py-14 md:py-20">
                 <div
                     aria-hidden
@@ -45,24 +51,49 @@ export default function AboutPage() {
                 />
                 <div className="container relative mx-auto px-4 text-center text-white">
                     <span className="text-xs font-semibold tracking-widest text-accent">
-                        SERVICES
+                        ABOUT US
                     </span>
                     <h1 className="mt-3 text-3xl font-bold tracking-tight md:text-5xl">
-                        サービス案内
+                        会社案内
                     </h1>
                     <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-white/85 md:text-lg">
-                        家じまい.comは、遺品整理・相続不動産の処分・終活など、埼玉県の40〜60代の方が直面する「実家じまい」を支援する総合相談窓口です。ご相談内容を整理し、提携する審査済みの業者・専門家ネットワークから最適なパートナーをご紹介します。
+                        家じまい.comは、埼玉県朝霞市を拠点に、実家じまい（遺品整理 × 相続不動産の買取）を自社ワンストップで提供する {COMPANY.name} のサービスです。
                     </p>
                 </div>
             </section>
 
-            {/* 2. ご相談いただける内容 */}
             <ServiceList />
 
-            {/* 3. 連携している専門家・機関 */}
-            <PartnerNetwork />
+            <section className="bg-secondary py-14 md:py-20">
+                <div className="container mx-auto px-4">
+                    <div className="mx-auto max-w-3xl">
+                        <div className="mb-8 text-center md:mb-10">
+                            <span className="section-eyebrow">COMPANY</span>
+                            <h2 className="mt-2 section-title">会社概要</h2>
+                        </div>
+                        <dl className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+                            {COMPANY_INFO.map((item, i) => (
+                                <div
+                                    key={item.label}
+                                    className={`grid gap-1 px-5 py-4 sm:grid-cols-[160px_1fr] sm:gap-4 md:px-7 ${
+                                        i !== COMPANY_INFO.length - 1
+                                            ? "border-b border-border"
+                                            : ""
+                                    }`}
+                                >
+                                    <dt className="text-sm font-bold text-foreground md:text-base">
+                                        {item.label}
+                                    </dt>
+                                    <dd className="text-sm text-muted-foreground md:text-base">
+                                        {item.value}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                </div>
+            </section>
 
-            {/* 4. メッセージとCTA */}
             <section className="bg-white py-14 md:py-20">
                 <div className="container mx-auto px-4">
                     <div className="mx-auto max-w-2xl text-center">

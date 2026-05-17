@@ -6,10 +6,11 @@ import { Home, Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
-    { href: "/", label: "ホーム" },
-    { href: "/about", label: "サービス案内" },
-    { href: "/#about", label: "家じまいとは" },
-    { href: "/#vendors", label: "業者を探す" },
+    { href: "/#flow", label: "ご相談の流れ" },
+    { href: "/#service", label: "サービス" },
+    { href: "/#pricing", label: "料金" },
+    { href: "/#area", label: "対応エリア" },
+    { href: "/about", label: "会社案内" },
 ];
 
 export function Header() {
@@ -18,7 +19,6 @@ export function Header() {
     return (
         <header className="sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-md">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                {/* Logo */}
                 <Link
                     href="/"
                     className="flex items-center gap-2 transition-opacity hover:opacity-80"
@@ -32,12 +32,11 @@ export function Header() {
                             家じまい.com
                         </span>
                         <span className="hidden text-xs text-muted-foreground md:inline">
-                            埼玉県の家じまい総合相談窓口
+                            埼玉県の実家じまい総合窓口
                         </span>
                     </div>
                 </Link>
 
-                {/* Desktop Nav */}
                 <nav className="hidden items-center gap-1 md:flex">
                     {NAV_LINKS.map((link) => (
                         <Link
@@ -59,7 +58,6 @@ export function Header() {
                     </Link>
                 </nav>
 
-                {/* Mobile Menu Button (44px タップ領域) */}
                 <button
                     className="flex h-11 w-11 items-center justify-center md:hidden"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -74,7 +72,6 @@ export function Header() {
                 </button>
             </div>
 
-            {/* Mobile Menu */}
             {mobileMenuOpen && (
                 <div className="border-t border-border bg-white px-4 py-3 md:hidden">
                     <nav className="flex flex-col gap-1">

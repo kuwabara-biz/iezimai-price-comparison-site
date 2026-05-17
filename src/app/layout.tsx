@@ -20,14 +20,14 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   keywords: [
+    "埼玉県 実家じまい",
+    "埼玉県 遺品整理",
+    "埼玉県 不動産買取",
+    "実家じまい 朝霞市",
+    "空き家 買取 埼玉",
+    "相続不動産 売却 埼玉",
     "家じまい",
-    "埼玉県",
-    "遺品整理",
-    "相続不動産",
-    "空き家",
-    "終活",
-    "朝霞市",
-    "実家じまい",
+    "みんなのいえ株式会社",
   ],
   openGraph: {
     type: "website",
@@ -36,14 +36,12 @@ export const metadata: Metadata = {
     siteName: SITE.fullName,
     title: SITE.titleDefault,
     description: SITE.description,
-    // TODO: 本番用 OGP 画像（1200x630px）を /public/og-image.png に配置して差し替え
     images: ["/og-image.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: SITE.titleDefault,
     description: SITE.description,
-    // TODO: 本番用 OGP 画像を /public/og-image.png に配置して差し替え
     images: ["/og-image.png"],
   },
 };

@@ -1,16 +1,28 @@
 export const SITE = {
     name: '家じまい.com',
-    fullName: '家じまい.com｜埼玉県の家じまい総合相談窓口',
-    tagline: '埼玉県の家じまい総合相談窓口',
+    fullName: '家じまい.com｜埼玉県の実家じまい・遺品整理・不動産買取',
+    tagline: '埼玉県の実家じまい総合窓口',
     url: 'https://iezimai.com',
-    titleDefault: '家じまい.com｜埼玉県の遺品整理・相続不動産・終活の専門相談窓口',
+    titleDefault: '埼玉県の実家じまい・遺品整理・不動産買取｜家じまい.com',
     description:
-        '埼玉県の40〜60代の家じまいをワンストップでサポート。遺品整理・相続不動産の処分・終活まで、家じまい.comが無料でご相談に応じます。',
+        '埼玉県で実家じまいなら、家じまい.com。遺品整理から相続不動産の買取まで自社ワンストップ対応。朝霞市拠点、県内全域対応。ご相談・お見積もり無料、しつこい営業なし。',
 } as const
 
 export const COMPANY = {
     name: 'みんなのいえ株式会社',
+    address: '埼玉県朝霞市',
 } as const
+
+export const HOME_SECTIONS = [
+    { id: 'problem', label: 'こんなお悩み', short: '悩み' },
+    { id: 'flow', label: '解決の流れ', short: '流れ' },
+    { id: 'why', label: '選ばれる理由', short: '理由' },
+    { id: 'service', label: 'サービス', short: 'サービス' },
+    { id: 'pricing', label: '料金の目安', short: '料金' },
+    { id: 'cases', label: '事例', short: '事例' },
+    { id: 'area', label: '対応エリア', short: 'エリア' },
+    { id: 'faq', label: 'よくある質問', short: 'FAQ' },
+] as const
 
 export const LEAD_STATUS_CONFIG = [
     { value: 'new', label: '未対応', color: 'bg-red-100 text-red-700' },
