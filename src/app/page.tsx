@@ -7,6 +7,7 @@ import ServiceSection from '@/components/home/ServiceSection'
 import PricingSection from '@/components/home/PricingSection'
 import CasesSection from '@/components/home/CasesSection'
 import AreaSection from '@/components/home/AreaSection'
+import GuideSection from '@/components/home/GuideSection'
 import FAQSection from '@/components/home/FAQSection'
 import { HOME_FAQ_ITEMS } from '@/components/home/faq-data'
 import BottomCTA from '@/components/home/BottomCTA'
@@ -70,6 +71,7 @@ export default function HomePage() {
             <PricingSection />
             <CasesSection />
             <AreaSection />
+            <GuideSection />
             <FAQSection />
             <BottomCTA />
             <TableOfContents />

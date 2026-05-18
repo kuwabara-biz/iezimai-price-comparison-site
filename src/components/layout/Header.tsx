@@ -6,10 +6,10 @@ import { Home, Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
+    { href: "/guide", label: "実家じまいガイド" },
     { href: "/#flow", label: "ご相談の流れ" },
     { href: "/#service", label: "サービス" },
     { href: "/#pricing", label: "料金" },
-    { href: "/#area", label: "対応エリア" },
     { href: "/about", label: "会社案内" },
 ];
 

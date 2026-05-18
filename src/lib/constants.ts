@@ -21,6 +21,7 @@ export const HOME_SECTIONS = [
     { id: 'pricing', label: '料金の目安', short: '料金' },
     { id: 'cases', label: '事例', short: '事例' },
     { id: 'area', label: '対応エリア', short: 'エリア' },
+    { id: 'guide', label: 'ガイド・コラム', short: 'ガイド' },
     { id: 'faq', label: 'よくある質問', short: 'FAQ' },
 ] as const
 
